@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<thing:thing-descriptions bindingId="ctrlhome"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
-        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+<thing:thing-descriptions bindingId="ctrlhome" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-    <!-- Sample Thing Type -->
-    <thing-type id="sample">
-        <label>CtrlHome Binding Thing</label>
-        <description>Sample thing for CtrlHome Binding</description>
+	<thing-type id="livolo_switch">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="bridge" />
+		</supported-bridge-type-refs>
 
-        <channels>
-            <channel id="channel1" typeId="sample-channel"/>
-        </channels>
-    </thing-type>
+		<label>ctrlHome Livolo switch</label>
+		<description>This is a ctrlHome ON/OFF Livolo switch</description>
 
-    <!-- Sample Channel Type -->
-    <channel-type id="sample-channel">
-        <item-type>ctrlhomeItem</item-type>
-        <label>CtrlHome Binding Channel</label>
-        <description>Sample channel for CtrlHome Binding</description>
-    </channel-type>
+		<channels>
+			<channel id="remote_id" typeId="remote_id" />
+			<channel id="switch_state" typeId="switch_state" />
+		</channels>
+	</thing-type>
+
+	<channel-type id="remote_id" advanced="true">
+		<item-type>Number</item-type>
+		<label>Remote Id</label>
+		<description>Remote id of the switch</description>
+		<state pattern="%d" readOnly="true">
+		</state>
+	</channel-type>
+
+	<channel-type id="switch_state">
+		<item-type>Switch</item-type>
+		<label>Switch State</label>
+		<description>On/off status of the switch</description>
+		<category>Switch</category>
+	</channel-type>
 
 </thing:thing-descriptions>
