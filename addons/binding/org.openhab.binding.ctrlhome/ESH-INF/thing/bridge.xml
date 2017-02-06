@@ -8,66 +8,66 @@
 		<description>This bridge represents the ctrlHome gateway.</description>
 
 		<channels>
-			<channel id="homie_version" typeId="homie_version">
+			<channel id="homieVersion" typeId="homieVersion">
 				<properties>
-					<property name="topic_suffix">$homie</property>
+					<property name="topicSuffix">$homie</property>
 				</properties>
 			</channel>
 			<channel id="online" typeId="online">
 				<properties>
-					<property name="topic_suffix">$online</property>
-					<property name="thing_state_indicator">online</property>
+					<property name="topicSuffix">$online</property>
+					<property name="thingStateIndicator">online</property>
 				</properties>
 			</channel>
 			<channel id="name" typeId="name">
 				<properties>
-					<property name="topic_suffix">$name</property>
+					<property name="topicSuffix">$name</property>
 				</properties>
 			</channel>
-			<channel id="local_ip" typeId="local_ip">
+			<channel id="localIp" typeId="localIp">
 				<properties>
-					<property name="topic_suffix">$localip</property>
+					<property name="topicSuffix">$localip</property>
 				</properties>
 			</channel>
 			<channel id="mac" typeId="mac">
 				<properties>
-					<property name="topic_suffix">$mac</property>
+					<property name="topicSuffix">$mac</property>
 				</properties>
 			</channel>
 
-			<channel id="stats_uptime" typeId="stats_uptime">
+			<channel id="statsUptime" typeId="statsUptime">
 				<properties>
-					<property name="topic_suffix">$stats/uptime</property>
+					<property name="topicSuffix">$stats/uptime</property>
 				</properties>
 			</channel>
-			<channel id="stats_signal" typeId="stats_signal">
+			<channel id="statsSignal" typeId="statsSignal">
 				<properties>
-					<property name="topic_suffix">$stats/signal</property>
+					<property name="topicSuffix">$stats/signal</property>
 				</properties>
 			</channel>
-			<channel id="stats_interval" typeId="stats_interval">
+			<channel id="statsInterval" typeId="statsInterval">
 				<properties>
-					<property name="topic_suffix">$stats/interval</property>
+					<property name="topicSuffix">$stats/interval</property>
 				</properties>
 			</channel>
-			<channel id="fw_name" typeId="fw_name">
+			<channel id="fwName" typeId="fwName">
 				<properties>
-					<property name="topic_suffix">$fw/name</property>
+					<property name="topicSuffix">$fw/name</property>
 				</properties>
 			</channel>
-			<channel id="fw_version" typeId="fw_version">
+			<channel id="fwVersion" typeId="fwVersion">
 				<properties>
-					<property name="topic_suffix">$fw/version</property>
+					<property name="topicSuffix">$fw/version</property>
 				</properties>
 			</channel>
-			<channel id="fw_checksum" typeId="fw_checksum">
+			<channel id="fwChecksum" typeId="fwChecksum">
 				<properties>
-					<property name="topic_suffix">$fw/checksum</property>
+					<property name="topicSuffix">$fw/checksum</property>
 				</properties>
 			</channel>
 			<channel id="implementation" typeId="implementation">
 				<properties>
-					<property name="topic_suffix">$implementation</property>
+					<property name="topicSuffix">$implementation</property>
 				</properties>
 			</channel>
 		</channels>
@@ -98,7 +98,7 @@
 
 	</bridge-type>
 
-	<channel-type id="homie_channel" advanced="true">
+	<channel-type id="homieVersion" advanced="true">
 		<item-type>String</item-type>
 		<label>Homie specification Version</label>
 		<description>Version of the Homie convention</description>
@@ -119,7 +119,7 @@
 		<state readOnly="true" />
 	</channel-type>
 
-	<channel-type id="local_ip" advanced="true">
+	<channel-type id="localIp" advanced="true">
 		<item-type>String</item-type>
 		<label>Device IP</label>
 		<description>IP address of the device</description>
@@ -133,42 +133,42 @@
 		<state readOnly="true" />
 	</channel-type>
 
-	<channel-type id="stats_uptime" advanced="true">
+	<channel-type id="statsUptime" advanced="true">
 		<item-type>Number</item-type>
 		<label>Uptime</label>
 		<description>Time in seconds since the device is online</description>
 		<state pattern="%d s" readOnly="true" />
 	</channel-type>
 
-	<channel-type id="stats_signal" advanced="true">
+	<channel-type id="statsSignal" advanced="true">
 		<item-type>Number</item-type>
 		<label>Signal</label>
 		<description>Signal level in percent. Might be not supported by wired devices</description>
 		<state pattern="%d %%" readOnly="true" />
 	</channel-type>
 
-	<channel-type id="stats_interval" advanced="true">
+	<channel-type id="statsInterval" advanced="true">
 		<item-type>Number</item-type>
 		<label>Update Interval</label>
 		<description>Interval (in seconds) at which the uptime and signal are refreshed</description>
 		<state pattern="%d s" readOnly="true" />
 	</channel-type>
 
-	<channel-type id="fw_name" advanced="true">
+	<channel-type id="fwName" advanced="true">
 		<item-type>String</item-type>
 		<label>Firmware Name</label>
 		<description>Name of the firmware on the device</description>
 		<state readOnly="true" />
 	</channel-type>
 
-	<channel-type id="fw_version" advanced="true">
+	<channel-type id="fwVersion" advanced="true">
 		<item-type>String</item-type>
 		<label>Firmware Version</label>
 		<description>Version of the firmware which is installed</description>
 		<state readOnly="true" />
 	</channel-type>
 
-	<channel-type id="fw_checksum" advanced="true">
+	<channel-type id="fwChecksum" advanced="true">
 		<item-type>String</item-type>
 		<label>Firmware Checksum</label>
 		<description>MD5 checksum of the firmware running on the device</description>

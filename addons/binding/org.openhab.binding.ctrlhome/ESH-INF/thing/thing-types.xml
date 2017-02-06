@@ -3,7 +3,7 @@
 	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-	<thing-type id="livolo_switch">
+	<thing-type id="livoloSwitch">
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="bridge" />
 		</supported-bridge-type-refs>
@@ -12,12 +12,12 @@
 		<description>This is a ctrlHome ON/OFF Livolo switch</description>
 
 		<channels>
-			<channel id="remote_id" typeId="remote_id" />
-			<channel id="switch_state" typeId="switch_state" />
+			<channel id="remoteId" typeId="remoteId" />
+			<channel id="switchState" typeId="switchState" />
 		</channels>
 	</thing-type>
 
-	<channel-type id="remote_id" advanced="true">
+	<channel-type id="remoteId" advanced="true">
 		<item-type>Number</item-type>
 		<label>Remote Id</label>
 		<description>Remote id of the switch</description>
@@ -25,7 +25,7 @@
 		</state>
 	</channel-type>
 
-	<channel-type id="switch_state">
+	<channel-type id="switchState">
 		<item-type>Switch</item-type>
 		<label>Switch State</label>
 		<description>On/off status of the switch</description>
