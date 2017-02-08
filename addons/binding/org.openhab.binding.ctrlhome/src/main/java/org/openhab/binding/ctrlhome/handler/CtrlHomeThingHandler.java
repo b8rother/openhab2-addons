@@ -18,16 +18,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link CtrlHomeHandler} is responsible for handling commands, which are
+ * The {@link CtrlHomeThingHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  * 
  * @author Luka Bartonicek - Initial contribution
  */
-public class CtrlHomeHandler extends BaseThingHandler {
+public class CtrlHomeThingHandler extends BaseThingHandler {
 
-    private Logger logger = LoggerFactory.getLogger(CtrlHomeHandler.class);
+    private Logger logger = LoggerFactory.getLogger(CtrlHomeThingHandler.class);
 
-	public CtrlHomeHandler(Thing thing) {
+	public CtrlHomeThingHandler(Thing thing) {
 		super(thing);
 	}
 
