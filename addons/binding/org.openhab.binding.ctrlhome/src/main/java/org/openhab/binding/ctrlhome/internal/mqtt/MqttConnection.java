@@ -17,25 +17,45 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.types.Command;
-import org.openhab.binding.homie.handler.HomieDeviceHandler;
-import org.openhab.binding.homie.internal.conventionv200.HomieConventions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MqttConnection {
+    private static Logger logger = LoggerFactory.getLogger(MqttConnection.class);
     private static final int PUBLISH_QOS = 2;
     private static final int SUBSCRIBE_QOS = 2;
-    private static Logger logger = LoggerFactory.getLogger(MqttConnection.class);
 
-    private final String brokerURL;
+    public static MqttConnection fromConfiguration(HomieConfiguration config, Object consumer) {
+        return new MqttConnection(config.getBrokerUrl(), config.getBaseTopic(), MQTT_CLIENTID + "-" + consumer);
+    }
+
     private final String basetopic;
+    private final String brokerUrl;
     private MqttClient client;
     private final String listenDeviceTopic;
-
     private final String qualifier;
 
-    public String getBasetopic() {
-        return basetopic;
+    public MqttConnection(String brokerUrl, String basetopic, String clientIdentifier) {
+        this.brokerUrl = brokerUrl;
+        this.basetopic = basetopic;
+        this.listenDeviceTopic = String.format("%s/#", basetopic);
+        this.qualifier = clientIdentifier;
+
+        connect();
+    }
+
+    private void connect() {
+        try {
+            logger.debug("MQTT Connection start");
+            MqttConnectOptions opts = new MqttConnectOptions();
+            opts.setAutomaticReconnect(true);
+            opts.setCleanSession(true);
+            client = new MqttClient(brokerUrl, MQTT_CLIENTID + "-" + qualifier, new MemoryPersistence());
+            client.connect(opts);
+            logger.debug("Homie MQTT Connection connected");
+        } catch (MqttException e) {
+            logger.error("MQTT Connect failed", e);
+        }
     }
 
     public void disconnect() {
@@ -46,37 +66,8 @@ public class MqttConnection {
         }
     }
 
-    public MqttConnection(String brokerurl, String basetopic, String clientIdentifier) {
-        this.brokerURL = brokerurl;
-        this.basetopic = basetopic;
-        listenDeviceTopic = String.format("%s/#", basetopic);
-        qualifier = clientIdentifier;
-
-        connect();
-    }
-
-    public static MqttConnection fromConfiguration(HomieConfiguration config, Object consumer) {
-        return new MqttConnection(config.getBrokerUrl(), config.getBaseTopic(), MQTT_CLIENTID + "-" + consumer);
-    }
-
-    private void connect() {
-        try {
-            logger.debug("Homie MQTT Connection start");
-            MqttConnectOptions opts = new MqttConnectOptions();
-            opts.setAutomaticReconnect(true);
-            opts.setCleanSession(true);
-            client = new MqttClient(brokerURL, MQTT_CLIENTID + "-" + qualifier, new MemoryPersistence());
-            client.connect(opts);
-            logger.debug("Homie MQTT Connection connected");
-        } catch (MqttException e) {
-            logger.error("MQTT Connect failed", e);
-        }
-    }
-
-    public void subscribe(Thing thing, IMqttMessageListener messageListener) throws MqttException {
-        String topic = String.format("%s/%s/#", basetopic, thing.getUID().getId());
-        resubscribe(topic, messageListener);
-
+    public String getBasetopic() {
+        return basetopic;
     }
 
     public void listenForDeviceIds(IMqttMessageListener messageListener) {
@@ -88,12 +79,29 @@ public class MqttConnection {
         }
     }
 
-    public void unsubscribeListenForDeviceIds() {
-        try {
-            client.unsubscribe(listenDeviceTopic);
-        } catch (MqttException e) {
-            logger.error("Failed to unsubscribe from topic " + listenDeviceTopic, e);
-        }
+    public void listenForNode(String deviceId, String nodeId, IMqttMessageListener listener) throws MqttException {
+        String topic = String.format("%s/%s/%s/", basetopic, deviceId, nodeId);
+        // Subscribe to type and proplist separately, as the notifications have to arrive first at the listener
+        resubscribe(topic + HomieConventions.HOMIE_NODE_TYPE_ANNOUNCEMENT_TOPIC_SUFFIX, listener);
+        resubscribe(topic + HomieConventions.HOMIE_NODE_PROPERTYLIST_ANNOUNCEMENT_TOPIC_SUFFIX, listener);
+        resubscribe(topic + "#", listener);
+    }
+
+    private void resubscribe(String topic, IMqttMessageListener listener) throws MqttException {
+        client.unsubscribe(topic);
+        client.subscribe(topic, SUBSCRIBE_QOS, listener);
+    }
+
+    public void send(String deviceId, String nodeId, String property, Command command)
+            throws MqttPersistenceException, MqttException {
+        String topic = String.format("%s/%s/%s/%s/set", basetopic, deviceId, nodeId, property);
+        client.publish(topic, command.toString().getBytes(), PUBLISH_QOS, true);
+
+    }
+
+    public void subscribe(Thing thing, IMqttMessageListener messageListener) throws MqttException {
+        String topic = String.format("%s/%s/#", basetopic, thing.getUID().getId());
+        resubscribe(topic, messageListener);
 
     }
 
@@ -118,23 +126,12 @@ public class MqttConnection {
 
     }
 
-    private void resubscribe(String topic, IMqttMessageListener listener) throws MqttException {
-        client.unsubscribe(topic);
-        client.subscribe(topic, SUBSCRIBE_QOS, listener);
-    }
-
-    public void listenForNode(String deviceId, String nodeId, IMqttMessageListener listener) throws MqttException {
-        String topic = String.format("%s/%s/%s/", basetopic, deviceId, nodeId);
-        // Subscribe to type and proplist separately, as the notifications have to arrive first at the listener
-        resubscribe(topic + HomieConventions.HOMIE_NODE_TYPE_ANNOUNCEMENT_TOPIC_SUFFIX, listener);
-        resubscribe(topic + HomieConventions.HOMIE_NODE_PROPERTYLIST_ANNOUNCEMENT_TOPIC_SUFFIX, listener);
-        resubscribe(topic + "#", listener);
-    }
-
-    public void send(String deviceId, String nodeId, String property, Command command)
-            throws MqttPersistenceException, MqttException {
-        String topic = String.format("%s/%s/%s/%s/set", basetopic, deviceId, nodeId, property);
-        client.publish(topic, command.toString().getBytes(), PUBLISH_QOS, true);
+    public void unsubscribeListenForDeviceIds() {
+        try {
+            client.unsubscribe(listenDeviceTopic);
+        } catch (MqttException e) {
+            logger.error("Failed to unsubscribe from topic " + listenDeviceTopic, e);
+        }
 
     }
 
