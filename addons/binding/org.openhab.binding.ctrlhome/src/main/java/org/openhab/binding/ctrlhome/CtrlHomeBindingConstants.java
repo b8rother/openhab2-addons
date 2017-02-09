@@ -33,7 +33,7 @@ public class CtrlHomeBindingConstants {
     public static final String  MQTT_CLIENT_ID_DELIMITER            = "_";
     public static final String  MQTT_CLIENT_ID_PREFIX               = "ctrlHomeOH2";
     public static final int     MQTT_QOS_PUBLISH                    = 2;
-    public static final int     MQTT_QOS_SUBSCRIBE                  = 2;
+    public static final int     MQTT_QOS_SUBSCRIBE                   = 2;
 
     // List of all Thing Type UIDs
     public final static ThingTypeUID THING_TYPE_LIVOLO_DIMMER = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_DIMMER);
