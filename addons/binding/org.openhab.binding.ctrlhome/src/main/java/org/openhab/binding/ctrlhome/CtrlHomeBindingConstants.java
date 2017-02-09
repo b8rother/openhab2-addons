@@ -15,23 +15,30 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
  *
  * @author Luka Bartonicek - Initial contribution
  */
+// @formatter:off
 public class CtrlHomeBindingConstants {
 
-    public static final String BINDING_ID = "ctrlhome";
-
-    // List of device types
-    public static final String DEVICE_CTRLHOME_BRIDGE = "bridge";
-    public static final String DEVICE_LIVOLO_SWITCH = "livoloSwitch";
-    public static final String DEVICE_LIVOLO_DIMMER = "livoloDimmer";
-    public static final String DEVICE_LIVOLO_ROLLERSHUTTER = "livoloRollershutter";
-
-    // List of all Thing Type UIDs
-    public final static ThingTypeUID LIVOLO_SWITCH_THING_TYPE = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_SWITCH);
-    public final static ThingTypeUID LIVOLO_DIMMER_THING_TYPE = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_DIMMER);
-    public final static ThingTypeUID LIVOLO_ROLLERSHUTTER_THING_TYPE = new ThingTypeUID(BINDING_ID,
-            DEVICE_LIVOLO_ROLLERSHUTTER);
+    public static final String BINDING_ID                           = "ctrlhome";
 
     // List of all Channel ids
-    public final static String CHANNEL_1 = "channel1";
+    public final static String CHANNEL_1                            = "channel1";
+
+    // List of device types
+    public static final String  DEVICE_CTRLHOME_BRIDGE              = "bridge";
+    public static final String  DEVICE_LIVOLO_DIMMER                = "livoloDimmer";
+    public static final String  DEVICE_LIVOLO_ROLLERSHUTTER         = "livoloRollershutter";
+    public static final String  DEVICE_LIVOLO_SWITCH                = "livoloSwitch";
+
+    // MQTT fixed config
+    public static final String  MQTT_CLIENT_ID_DELIMITER            = "_";
+    public static final String  MQTT_CLIENT_ID_PREFIX               = "ctrlHomeOH2";
+    public static final int     MQTT_QOS_PUBLISH                    = 2;
+    public static final int     MQTT_QOS_SUBSCRIBE                  = 2;
+
+    // List of all Thing Type UIDs
+    public final static ThingTypeUID THING_TYPE_LIVOLO_DIMMER = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_DIMMER);
+    public final static ThingTypeUID THING_TYPE_LIVOLO_ROLLERSHUTTER = new ThingTypeUID(BINDING_ID,
+            DEVICE_LIVOLO_ROLLERSHUTTER);
+    public final static ThingTypeUID THING_TYPE_LIVOLO_SWITCH = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_SWITCH);
 
 }

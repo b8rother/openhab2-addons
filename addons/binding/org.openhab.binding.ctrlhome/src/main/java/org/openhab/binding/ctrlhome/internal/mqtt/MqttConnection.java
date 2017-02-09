@@ -17,13 +17,12 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.types.Command;
+import org.openhab.binding.ctrlhome.CtrlHomeBindingConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MqttConnection {
     private static Logger logger = LoggerFactory.getLogger(MqttConnection.class);
-    private static final int PUBLISH_QOS = 2;
-    private static final int SUBSCRIBE_QOS = 2;
 
     public static MqttConnection fromConfiguration(HomieConfiguration config, Object consumer) {
         return new MqttConnection(config.getBrokerUrl(), config.getBaseTopic(), MQTT_CLIENTID + "-" + consumer);
@@ -32,14 +31,14 @@ public class MqttConnection {
     private final String basetopic;
     private final String brokerUrl;
     private MqttClient client;
+    private final String clientId;
     private final String listenDeviceTopic;
-    private final String qualifier;
 
-    public MqttConnection(String brokerUrl, String basetopic, String clientIdentifier) {
+    public MqttConnection(String brokerUrl, String basetopic, String clientId) {
         this.brokerUrl = brokerUrl;
         this.basetopic = basetopic;
         this.listenDeviceTopic = String.format("%s/#", basetopic);
-        this.qualifier = clientIdentifier;
+        this.clientId = clientId;
 
         connect();
     }
@@ -47,12 +46,15 @@ public class MqttConnection {
     private void connect() {
         try {
             logger.debug("MQTT Connection start");
+
             MqttConnectOptions opts = new MqttConnectOptions();
             opts.setAutomaticReconnect(true);
             opts.setCleanSession(true);
-            client = new MqttClient(brokerUrl, MQTT_CLIENTID + "-" + qualifier, new MemoryPersistence());
+            client = new MqttClient(brokerUrl, CtrlHomeBindingConstants.MQTT_CLIENT_ID_PREFIX
+                    + CtrlHomeBindingConstants.MQTT_CLIENT_ID_DELIMITER + clientId, new MemoryPersistence());
             client.connect(opts);
-            logger.debug("Homie MQTT Connection connected");
+
+            logger.debug("MQTT Connection success");
         } catch (MqttException e) {
             logger.error("MQTT Connect failed", e);
         }
@@ -62,7 +64,7 @@ public class MqttConnection {
         try {
             client.disconnectForcibly();
         } catch (MqttException e) {
-            logger.error("Error on disconnect", e);
+            logger.error("MQTT Disconnect failed", e);
         }
     }
 
