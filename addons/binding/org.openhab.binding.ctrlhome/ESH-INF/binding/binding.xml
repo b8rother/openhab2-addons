@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<binding:binding id="ctrlhome"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:binding="http://eclipse.org/smarthome/schemas/binding/v1.0.0"
-        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/binding/v1.0.0 http://eclipse.org/smarthome/schemas/binding-1.0.0.xsd">
+<binding:binding id="ctrlhome" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:binding="http://eclipse.org/smarthome/schemas/binding/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/binding/v1.0.0 http://eclipse.org/smarthome/schemas/binding-1.0.0.xsd">
 
-    <name>ctrlHome Binding</name>
-    <description>This is the binding for ctrlHome. ctrlHome implements Homie, an MQTT convention for the IoT</description>
-    <author>Luka Bartoniček</author>
+	<name>ctrlHome Binding</name>
+	<description>This is the binding for ctrlHome. ctrlHome implements Homie, an MQTT convention for the IoT</description>
+	<author>Luka Bartoniček</author>
 
+	<config-description>
+		<parameter name="mqttBrokerUrl" type="text" required="true">
+			<label>MQTT Broker URL</label>
+			<description>MQTT Broker URL in the following format: "tcp://myBrokerHost:1883"</description>
+			<default>tcp://broker:1883</default>
+		</parameter>
+
+		<parameter name="mqttBaseTopic" type="text" required="true">
+			<label>MQTT Base Topic</label>
+			<description>Topic under which all your devices are located. If e.g. your device sends to homie/mydevice-1/$online, your baseTopic is "homie/"</description>
+			<default>homie</default>
+		</parameter>
+	</config-description>
 </binding:binding>

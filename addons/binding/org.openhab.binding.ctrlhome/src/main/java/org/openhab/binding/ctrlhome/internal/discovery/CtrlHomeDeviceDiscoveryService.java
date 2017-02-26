@@ -11,6 +11,7 @@ package org.openhab.binding.ctrlhome.internal.discovery;
 import java.util.Date;
 import java.util.Set;
 
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
@@ -25,19 +26,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link CtrlHomeThingDiscoveryService} class is used to discover MAX! Cube
- * devices that are connected to the Lan gateway.
+ * The {@link CtrlHomeDeviceDiscoveryService} class is used to discover ctrlHome devices
+ * that are connected to the Wifi network via MQTT.
  *
- * @author Marcel Verpaalen - Initial contribution
+ * @author Luka Bartonicek - Initial contribution
  */
-public class CtrlHomeThingDiscoveryService extends AbstractDiscoveryService implements DeviceStatusListener {
+public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService
+        implements DeviceStatusListener, IMqttMessageListener {
 
     private final static int SEARCH_TIME = 60;
-    private final Logger logger = LoggerFactory.getLogger(CtrlHomeThingDiscoveryService.class);
+    private final Logger logger = LoggerFactory.getLogger(CtrlHomeDeviceDiscoveryService.class);
 
     private MaxCubeBridgeHandler maxCubeBridgeHandler;
 
-    public CtrlHomeThingDiscoveryService(MaxCubeBridgeHandler maxCubeBridgeHandler) {
+    public CtrlHomeDeviceDiscoveryService(MaxCubeBridgeHandler maxCubeBridgeHandler) {
         super(MaxBinding.SUPPORTED_DEVICE_THING_TYPES_UIDS, SEARCH_TIME, true);
         this.maxCubeBridgeHandler = maxCubeBridgeHandler;
     }
