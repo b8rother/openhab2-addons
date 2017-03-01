@@ -10,7 +10,7 @@
 -->
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="binding.ctrlhome">
 
-   <implementation class="org.openhab.binding.ctrlhome.internal.CtrlHomeHandlerFactory"/>
+   <implementation class="org.openhab.binding.ctrlhome.internal.factory.CtrlHomeHandlerFactory"/>
 
    <service>
       <provide interface="org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory"/>
