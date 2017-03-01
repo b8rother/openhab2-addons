@@ -14,6 +14,21 @@ public class Topic {
     private String deviceStatsSignal;
     private String deviceStatsUptime;
     private String nodeId;
+    private String nodeProperties;
+    private String nodeType;
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public boolean isBridge() {
+        if (deviceId != null && nodeId == null) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
     public void setBaseTopic(String baseTopic) {
         this.baseTopic = baseTopic;
@@ -27,53 +42,53 @@ public class Topic {
         this.deviceFwVersion = deviceFwVersion;
     }
 
-    public void setDeviceHomie(String string) {
-        // TODO Auto-generated method stub
+    public void setDeviceHomie(String deviceHomie) {
+        this.deviceHomie = deviceHomie;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
 
     }
 
-    public void setDeviceId(String string) {
-        // TODO Auto-generated method stub
+    public void setDeviceImplementation(String deviceImplementation) {
+        this.deviceImplementation = deviceImplementation;
 
     }
 
-    public void setDeviceImplementation(String string) {
-        // TODO Auto-generated method stub
-
+    public void setDeviceLocalIp(String deviceLocalIp) {
+        this.deviceLocalIp = deviceLocalIp;
     }
 
-    public void setDeviceLocalIp(String string) {
-        // TODO Auto-generated method stub
-
+    public void setDeviceMac(String deviceMac) {
+        this.deviceMac = deviceMac;
     }
 
-    public void setDeviceMac(String string) {
-        // TODO Auto-generated method stub
-
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
-    public void setDeviceName(String string) {
-        // TODO Auto-generated method stub
-
+    public void setDeviceOnline(String deviceOnline) {
+        this.deviceOnline = deviceOnline;
     }
 
-    public void setDeviceOnline(String string) {
-        // TODO Auto-generated method stub
-
+    public void setDeviceStatsSignal(String deviceStatsSignal) {
+        this.deviceStatsSignal = deviceStatsSignal;
     }
 
-    public void setDeviceStatsSignal(String string) {
-        // TODO Auto-generated method stub
-
+    public void setDeviceStatsUptime(String deviceStatsUptime) {
+        this.deviceStatsUptime = deviceStatsUptime;
     }
 
-    public void setDeviceStatsUptime(String string) {
-        // TODO Auto-generated method stub
-
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 
-    public void setNodeId(String string) {
-        // TODO Auto-generated method stub
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
+    }
 
+    public void setProperties(String nodeProperties) {
+        this.nodeProperties = nodeProperties;
     }
 }

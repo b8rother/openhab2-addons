@@ -35,10 +35,10 @@ import org.slf4j.LoggerFactory;
  * @author Luka Bartonicek - Initial contribution
  */
 public class CtrlHomeHandlerFactory extends BaseThingHandlerFactory {
-    private CtrlHomeConfiguration configuration;
-    private Map<ThingUID, ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
-
     private static Logger logger = LoggerFactory.getLogger(CtrlHomeHandlerFactory.class);
+    private CtrlHomeConfiguration configuration;
+
+    private Map<ThingUID, ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
 
     @Override
     protected void activate(ComponentContext componentContext) {
@@ -52,22 +52,18 @@ public class CtrlHomeHandlerFactory extends BaseThingHandlerFactory {
     }
 
     @Override
-    public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-        return CtrlHomeBindingConstants.SUPPORTED_ALL_THING_TYPES_UIDS.contains(thingTypeUID);
-    }
-
-    @Override
     protected ThingHandler createHandler(Thing thing) {
         if (thing.getThingTypeUID().equals(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY)) {
             CtrlHomeBridgeHandler bridgeHandler = new CtrlHomeBridgeHandler(thing);
-            CtrlHomeDeviceDiscoveryService discoveryService = new CtrlHomeDeviceDiscoveryService(bridgeHandler);
-            discoveryService.activate();
+            // CtrlHomeDeviceDiscoveryService discoveryService = new CtrlHomeDeviceDiscoveryService(bridgeHandler);
+            // discoveryService.activate();
 
-            this.discoveryServiceRegs.put(bridgeHandler.getThing().getUID(), bundleContext.registerService(
-                    DiscoveryService.class.getName(), discoveryService, new Hashtable<String, Object>()));
+            // this.discoveryServiceRegs.put(bridgeHandler.getThing().getUID(), bundleContext.registerService(
+            // DiscoveryService.class.getName(), discoveryService, new Hashtable<String, Object>()));
             return bridgeHandler;
         } else if (supportsThingType(thing.getThingTypeUID())) {
-            return new CtrlHomeDeviceHandler(thing);
+            return null;
+            // return new CtrlHomeDeviceHandler(thing);
         } else {
             logger.debug("ThingHandler not found for {}", thing.getThingTypeUID());
             return null;
@@ -118,11 +114,16 @@ public class CtrlHomeHandlerFactory extends BaseThingHandlerFactory {
                 // remove discovery service, if bridge handler is removed
                 CtrlHomeDeviceDiscoveryService service = (CtrlHomeDeviceDiscoveryService) bundleContext
                         .getService(serviceReg.getReference());
-                service.deactivate();
+                // service.deactivate();
                 serviceReg.unregister();
                 discoveryServiceRegs.remove(thingHandler.getThing().getUID());
             }
         }
         super.removeHandler(thingHandler);
+    }
+
+    @Override
+    public boolean supportsThingType(ThingTypeUID thingTypeUID) {
+        return CtrlHomeBindingConstants.SUPPORTED_ALL_THING_TYPES_UIDS.contains(thingTypeUID);
     }
 }

@@ -8,12 +8,6 @@
  */
 package org.openhab.binding.ctrlhome.internal.discovery;
 
-import static org.openhab.binding.homie.HomieBindingConstants.HOMIE_DEVICE_THING_TYPE;
-import static org.openhab.binding.homie.internal.conventionv200.HomieConventions.NAME_TOPIC_SUFFIX;
-
-import java.text.ParseException;
-
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
@@ -22,6 +16,8 @@ import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.openhab.binding.ctrlhome.CtrlHomeBindingConstants;
 import org.openhab.binding.ctrlhome.internal.config.CtrlHomeConfiguration;
+import org.openhab.binding.ctrlhome.internal.homie.Topic;
+import org.openhab.binding.ctrlhome.internal.homie.TopicParser;
 import org.openhab.binding.ctrlhome.internal.mqtt.MqttConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +31,12 @@ import org.slf4j.LoggerFactory;
  */
 public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService implements IMqttMessageListener {
     private CtrlHomeConfiguration configuration;
-
     private final Logger logger = LoggerFactory.getLogger(CtrlHomeBridgeDiscoveryService.class);
 
     // private final TopicParser topicParser;
     private MqttConnection mqttconnection;
+
+    private TopicParser topicParser;
 
     public CtrlHomeBridgeDiscoveryService(CtrlHomeConfiguration configuration) {
         super(CtrlHomeBindingConstants.SUPPORTED_BRIDGE_THING_TYPES_UIDS,
@@ -49,26 +46,21 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
 
         this.configuration = configuration;
         mqttconnection = new MqttConnection(configuration, this);
-        // topicParser = new TopicParser(config.getBaseTopic());
+        topicParser = new TopicParser(configuration.getBaseTopic());
 
     }
 
     @Override
-    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+    public void messageArrived(String topicString, MqttMessage mqttMessage) throws Exception {
         String message = mqttMessage.toString();
 
-        try {
-            HomieTopic ht = topicParser.parse(topic);
-            if (ht.isDeviceProperty() && StringUtils.equals(ht.getCombinedInternalPropertyName(), NAME_TOPIC_SUFFIX)) {
-                ThingUID thingId = new ThingUID(HOMIE_DEVICE_THING_TYPE, ht.getDeviceId());
-                DiscoveryResult dr = DiscoveryResultBuilder.create(thingId).withLabel(message).build();
-                thingDiscovered(dr);
-            }
-
-        } catch (ParseException e) {
-            logger.debug("Topic cannot be parsed", e);
+        Topic topic = topicParser.parse(topicString);
+        if (topic.isBridge()) {
+            ThingUID thingId = new ThingUID(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY,
+                    topic.getDeviceId());
+            DiscoveryResult dr = DiscoveryResultBuilder.create(thingId).withLabel(message).build();
+            thingDiscovered(dr);
         }
-
     }
 
     @Override

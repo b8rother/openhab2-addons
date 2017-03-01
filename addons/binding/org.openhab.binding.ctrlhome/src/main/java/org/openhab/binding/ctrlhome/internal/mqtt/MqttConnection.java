@@ -14,7 +14,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.ctrlhome.CtrlHomeBindingConstants;
@@ -102,16 +101,16 @@ public class MqttConnection {
         // resubscribe(topic + "#", listener);
     }
 
-    private void resubscribe(String topic, IMqttMessageListener listener) throws MqttException {
-        client.unsubscribe(topic);
-        client.subscribe(topic, CtrlHomeBindingConstants.MQTT_QOS_SUBSCRIBE, listener);
-    }
-
     public void publish(String deviceId, String nodeId, String property, Command command)
             throws MqttPersistenceException, MqttException {
         String topic = String.format("%s/%s/%s/%s/set", baseTopic, deviceId, nodeId, property);
         client.publish(topic, command.toString().getBytes(), CtrlHomeBindingConstants.MQTT_QOS_PUBLISH, true);
 
+    }
+
+    private void resubscribe(String topic, IMqttMessageListener listener) throws MqttException {
+        client.unsubscribe(topic);
+        client.subscribe(topic, CtrlHomeBindingConstants.MQTT_QOS_SUBSCRIBE, listener);
     }
 
     public void subscribe(Thing thing, IMqttMessageListener messageListener) throws MqttException {
@@ -125,21 +124,22 @@ public class MqttConnection {
      *
      * @param channelUID
      * @param handler
+     *            //
      */
-    public void subscribeChannel(Channel channel, HomieDeviceHandler handler) {
-
-        String topic = String.format("%s/%s/%s", baseTopic, handler.getThing().getUID().getId(),
-                channel.getProperties().get(CHANNELPROPERTY_TOPICSUFFIX));
-        logger.debug(
-                "(Re-)Subscribing to topic '" + topic + "' to listen for events of channel '" + channel.getUID() + "'");
-        try {
-            resubscribe(topic, handler);
-            logger.debug("Subscribed to topic " + topic);
-        } catch (MqttException e) {
-            logger.error("Error (re)subscribing to channel. topic is " + topic, e);
-        }
-
-    }
+    // public void subscribeChannel(Channel channel, HomieDeviceHandler handler) {
+    //
+    // String topic = String.format("%s/%s/%s", baseTopic, handler.getThing().getUID().getId(),
+    // channel.getProperties().get(CHANNELPROPERTY_TOPICSUFFIX));
+    // logger.debug(
+    // "(Re-)Subscribing to topic '" + topic + "' to listen for events of channel '" + channel.getUID() + "'");
+    // try {
+    // resubscribe(topic, handler);
+    // logger.debug("Subscribed to topic " + topic);
+    // } catch (MqttException e) {
+    // logger.error("Error (re)subscribing to channel. topic is " + topic, e);
+    // }
+    //
+    // }
 
     public void unsubscribeListenForBridge() {
         try {

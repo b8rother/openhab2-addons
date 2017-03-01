@@ -1,22 +1,22 @@
 package org.openhab.binding.ctrlhome.internal.homie;
 
-import java.text.ParseException;
-
 public class TopicParser {
-    private final String HOMIE_PROPERTY_PREFIX = "$";
-    private final String HOMIE_DEVICE_PROPERTY_HOMIE = "homie";
-    private final String HOMIE_DEVICE_PROPERTY_ONLINE = "online";
-    private final String HOMIE_DEVICE_PROPERTY_NAME = "name";
-    private final String HOMIE_DEVICE_PROPERTY_LOCAL_IP = "localip";
-    private final String HOMIE_DEVICE_PROPERTY_MAC = "mac";
-    private final String HOMIE_DEVICE_PROPERTY_STATS = "stats";
-    private final String HOMIE_DEVICE_PROPERTY_STATS_UPTIME = "uptime";
-    private final String HOMIE_DEVICE_PROPERTY_STATS_SIGNAL = "signal";
+    private String baseTopic;
     private final String HOMIE_DEVICE_PROPERTY_FW = "fw";
     private final String HOMIE_DEVICE_PROPERTY_FW_NAME = "name";
     private final String HOMIE_DEVICE_PROPERTY_FW_VERSION = "version";
+    private final String HOMIE_DEVICE_PROPERTY_HOMIE = "homie";
     private final String HOMIE_DEVICE_PROPERTY_IMPLEMENTATION = "implementation";
-    private String baseTopic;
+    private final String HOMIE_DEVICE_PROPERTY_LOCAL_IP = "localip";
+    private final String HOMIE_DEVICE_PROPERTY_MAC = "mac";
+    private final String HOMIE_DEVICE_PROPERTY_NAME = "name";
+    private final String HOMIE_DEVICE_PROPERTY_ONLINE = "online";
+    private final String HOMIE_DEVICE_PROPERTY_STATS = "stats";
+    private final String HOMIE_DEVICE_PROPERTY_STATS_SIGNAL = "signal";
+    private final String HOMIE_DEVICE_PROPERTY_STATS_UPTIME = "uptime";
+    private final String HOMIE_NODE_PROPERTY_PROPERTIES = "properties";
+    private final String HOMIE_NODE_PROPERTY_TYPE = "type";
+    private final String HOMIE_PROPERTY_PREFIX = "$";
 
     public TopicParser(String baseTopic) {
         this.baseTopic = baseTopic;
@@ -26,7 +26,7 @@ public class TopicParser {
         return baseTopic;
     }
 
-    public Topic parse(String topicString) throws ParseException {
+    public Topic parse(String topicString) {
         String[] elements = topicString.split("\\/");
         Topic topic = new Topic();
         if (elements.length > 1) {
@@ -69,11 +69,19 @@ public class TopicParser {
                     }
                 } else {
                     topic.setNodeId(elements[2]);
+                    if (elements[3].startsWith(HOMIE_PROPERTY_PREFIX)) {
+                        if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_NODE_PROPERTY_TYPE)) {
+                            topic.setNodeType(elements[4]);
+                        }
+                        if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_NODE_PROPERTY_PROPERTIES)) {
+                            topic.setProperties(elements[4]);
+                        }
+                    }
                 }
             }
         }
 
-        return new Topic();
+        return topic;
     }
 
 }
