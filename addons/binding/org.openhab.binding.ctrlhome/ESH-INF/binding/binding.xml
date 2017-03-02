@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/binding/v1.0.0 http://eclipse.org/smarthome/schemas/binding-1.0.0.xsd">
 
 	<name>ctrlHome Binding</name>
-	<description>This is the binding for ctrlHome. ctrlHome implements Homie, an MQTT convention for the IoT</description>
+	<description>This is the binding for ctrlHome devices. ctrlHome implements Homie, an MQTT convention for the IoT.</description>
 	<author>Luka Bartoniček</author>
 
 	<config-description>

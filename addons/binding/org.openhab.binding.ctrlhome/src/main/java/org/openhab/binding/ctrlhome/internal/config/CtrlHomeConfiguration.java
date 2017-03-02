@@ -11,7 +11,6 @@ package org.openhab.binding.ctrlhome.internal.config;
 import java.util.Dictionary;
 
 public class CtrlHomeConfiguration {
-
     private String baseTopic;
     private String brokerUrl;
 
@@ -24,12 +23,12 @@ public class CtrlHomeConfiguration {
         return baseTopic;
     }
 
-    public void setBaseTopic(String baseTopic) {
-        this.baseTopic = baseTopic;
-    }
-
     public String getBrokerUrl() {
         return brokerUrl;
+    }
+
+    public void setBaseTopic(String baseTopic) {
+        this.baseTopic = baseTopic;
     }
 
     public void setBrokerUrl(String brokerUrl) {

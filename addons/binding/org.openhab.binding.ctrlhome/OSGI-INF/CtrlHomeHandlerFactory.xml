@@ -8,7 +8,7 @@
     http://www.eclipse.org/legal/epl-v10.html
 
 -->
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="binding.ctrlhome">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" configuration-policy="require" immediate="true" name="binding.ctrlhome">
 
    <implementation class="org.openhab.binding.ctrlhome.internal.factory.CtrlHomeHandlerFactory"/>
 
