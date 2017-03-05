@@ -30,12 +30,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService implements IMqttMessageListener {
-    private CtrlHomeConfiguration configuration;
     private final Logger logger = LoggerFactory.getLogger(CtrlHomeBridgeDiscoveryService.class);
 
-    // private final TopicParser topicParser;
     private MqttConnection mqttconnection;
-
     private TopicParser topicParser;
 
     public CtrlHomeBridgeDiscoveryService(CtrlHomeConfiguration configuration) {
@@ -44,7 +41,6 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
 
         logger.info("ctrlHome Bridge Discovery Service started");
 
-        this.configuration = configuration;
         mqttconnection = new MqttConnection(configuration, this);
         topicParser = new TopicParser(configuration.getBaseTopic());
 
@@ -54,7 +50,9 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
     public void messageArrived(String topicString, MqttMessage mqttMessage) throws Exception {
         String message = mqttMessage.toString();
 
-        Topic topic = topicParser.parse(topicString);
+        logger.info(topicString);
+        logger.info(message);
+        Topic topic = topicParser.parse(topicString, message);
         if (topic.isBridge()) {
             ThingUID thingId = new ThingUID(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY,
                     topic.getDeviceId());

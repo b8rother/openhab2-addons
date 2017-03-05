@@ -1,6 +1,10 @@
 package org.openhab.binding.ctrlhome.internal.homie;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TopicParser {
+    private static Logger logger = LoggerFactory.getLogger(TopicParser.class);
     private String baseTopic;
     private final String HOMIE_DEVICE_PROPERTY_FW = "fw";
     private final String HOMIE_DEVICE_PROPERTY_FW_NAME = "name";
@@ -26,55 +30,56 @@ public class TopicParser {
         return baseTopic;
     }
 
-    public Topic parse(String topicString) {
+    public Topic parse(String topicString, String mqttMessage) {
         String[] elements = topicString.split("\\/");
+
         Topic topic = new Topic();
         if (elements.length > 1) {
             topic.setDeviceId(elements[1]);
             if (elements.length > 2) {
                 if (elements[2].startsWith(HOMIE_PROPERTY_PREFIX)) {
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_HOMIE)) {
-                        topic.setDeviceHomie(elements[3]);
+                        topic.setDeviceHomie(mqttMessage);
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_ONLINE)) {
-                        topic.setDeviceOnline(elements[3]);
+                        topic.setDeviceOnline(mqttMessage);
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_NAME)) {
-                        topic.setDeviceName(elements[3]);
+                        topic.setDeviceName(mqttMessage);
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_LOCAL_IP)) {
-                        topic.setDeviceLocalIp(elements[3]);
+                        topic.setDeviceLocalIp(mqttMessage);
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_MAC)) {
-                        topic.setDeviceMac(elements[3]);
+                        topic.setDeviceMac(mqttMessage);
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_STATS)) {
                         if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_STATS_UPTIME)) {
-                            topic.setDeviceStatsUptime(elements[4]);
+                            topic.setDeviceStatsUptime(mqttMessage);
                         }
                         if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_STATS_SIGNAL)) {
-                            topic.setDeviceStatsSignal(elements[4]);
+                            topic.setDeviceStatsSignal(mqttMessage);
                         }
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_FW)) {
                         if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_FW_NAME)) {
-                            topic.setDeviceFwName(elements[4]);
+                            topic.setDeviceFwName(mqttMessage);
                         }
                         if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_FW_VERSION)) {
-                            topic.setDeviceFwVersion(elements[4]);
+                            topic.setDeviceFwVersion(mqttMessage);
                         }
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_IMPLEMENTATION)) {
-                        topic.setDeviceImplementation(elements[3]);
+                        topic.setDeviceImplementation(mqttMessage);
                     }
                 } else {
                     topic.setNodeId(elements[2]);
                     if (elements[3].startsWith(HOMIE_PROPERTY_PREFIX)) {
                         if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_NODE_PROPERTY_TYPE)) {
-                            topic.setNodeType(elements[4]);
+                            topic.setNodeType(mqttMessage);
                         }
                         if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_NODE_PROPERTY_PROPERTIES)) {
-                            topic.setProperties(elements[4]);
+                            topic.setProperties(mqttMessage);
                         }
                     }
                 }

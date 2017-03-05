@@ -31,17 +31,13 @@ public class MqttConnection {
     private String listenBridgeTopic;
     private String listenDeviceTopic;
 
-    public MqttConnection(CtrlHomeConfiguration configuration, Object consumer) {
-        new MqttConnection(configuration.getBrokerUrl(), configuration.getBaseTopic(),
-                CtrlHomeBindingConstants.MQTT_CLIENT_ID_PREFIX + CtrlHomeBindingConstants.MQTT_CLIENT_ID_DELIMITER
-                        + consumer);
-    }
-
-    public MqttConnection(String brokerUrl, String basetopic, String clientId) {
-        this.brokerUrl = brokerUrl;
-        this.baseTopic = basetopic;
-        this.clientId = clientId;
-        this.listenBridgeTopic = String.format("%s/#", basetopic);
+    public MqttConnection(CtrlHomeConfiguration configuration, Object client) {
+        this.brokerUrl = configuration.getBrokerUrl();
+        this.baseTopic = configuration.getBaseTopic();
+        this.clientId = CtrlHomeBindingConstants.MQTT_CLIENT_ID_PREFIX
+                + CtrlHomeBindingConstants.MQTT_CLIENT_ID_DELIMITER
+                + client.toString().substring(client.toString().lastIndexOf('.') + 1);
+        this.listenBridgeTopic = String.format("%s/#", baseTopic);
 
         connect();
     }
@@ -75,7 +71,7 @@ public class MqttConnection {
     }
 
     public void listenForBridge(IMqttMessageListener listener) {
-        logger.debug("Listening for bridge devices on topic " + listenBridgeTopic);
+        logger.info("Listening for bridge devices on topic " + listenBridgeTopic);
         try {
             resubscribe(listenBridgeTopic, listener);
         } catch (MqttException e) {
