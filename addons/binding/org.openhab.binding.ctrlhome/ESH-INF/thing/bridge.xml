@@ -8,177 +8,95 @@
 		<description>This bridge represents the ctrlHome gateway.</description>
 
 		<channels>
-			<channel id="homieVersion" typeId="homieVersion">
-				<properties>
-					<property name="topicSuffix">$homie</property>
-				</properties>
-			</channel>
-			<channel id="online" typeId="online">
-				<properties>
-					<property name="topicSuffix">$online</property>
-					<property name="thingStateIndicator">online</property>
-				</properties>
-			</channel>
-			<channel id="name" typeId="name">
-				<properties>
-					<property name="topicSuffix">$name</property>
-				</properties>
-			</channel>
-			<channel id="localIp" typeId="localIp">
-				<properties>
-					<property name="topicSuffix">$localip</property>
-				</properties>
-			</channel>
-			<channel id="mac" typeId="mac">
-				<properties>
-					<property name="topicSuffix">$mac</property>
-				</properties>
-			</channel>
-
-			<channel id="statsUptime" typeId="statsUptime">
-				<properties>
-					<property name="topicSuffix">$stats/uptime</property>
-				</properties>
-			</channel>
-			<channel id="statsSignal" typeId="statsSignal">
-				<properties>
-					<property name="topicSuffix">$stats/signal</property>
-				</properties>
-			</channel>
-			<channel id="statsInterval" typeId="statsInterval">
-				<properties>
-					<property name="topicSuffix">$stats/interval</property>
-				</properties>
-			</channel>
-			<channel id="fwName" typeId="fwName">
-				<properties>
-					<property name="topicSuffix">$fw/name</property>
-				</properties>
-			</channel>
-			<channel id="fwVersion" typeId="fwVersion">
-				<properties>
-					<property name="topicSuffix">$fw/version</property>
-				</properties>
-			</channel>
-			<channel id="fwChecksum" typeId="fwChecksum">
-				<properties>
-					<property name="topicSuffix">$fw/checksum</property>
-				</properties>
-			</channel>
-			<channel id="implementation" typeId="implementation">
-				<properties>
-					<property name="topicSuffix">$implementation</property>
-				</properties>
-			</channel>
+			<channel id="online" typeId="online" />
 		</channels>
 
 		<config-description>
-			<parameter-group name="mqtt">
-				<label>MQTT</label>
-				<description>MQTT settings</description>
-				<advanced>false</advanced>
-			</parameter-group>
+		    <parameter-group name="device">
+                <label>Device</label>
+                <description>Device identification.</description>
+                <advanced>false</advanced>
+            </parameter-group>
 			<parameter-group name="homie">
-				<label>Homie</label>
-				<description>Homie settings</description>
-				<advanced>false</advanced>
-			</parameter-group>
-
-			<parameter name="mqttBrokerUrl" type="text" required="true" groupName="mqtt">
-				<label>MQTT Broker URL</label>
-				<description>MQTT Broker URL in the format "tcp://myBrokerHost:1883"</description>
-				<default>tcp://broker:1883</default>
-			</parameter>
-			<parameter name="basetopic" type="text" required="true" groupName="mqtt">
-				<label>MQTT base topic</label>
-				<description>Topic under which all your devices are located. If e.g. your device sends homie/mydevice-1/$online, your basetopic is "homie/"</description>
-				<default>homie</default>
-			</parameter>
+                <label>Homie</label>
+                <description>Homie identification and settings.</description>
+                <advanced>false</advanced>
+            </parameter-group>
+			<parameter-group name="status">
+                <label>Status</label>
+                <description>Device status.</description>
+                <advanced>true</advanced>
+            </parameter-group>
+			<parameter-group name="firmware">
+                <label>Firmware</label>
+                <description>Firmware information.</description>
+                <advanced>true</advanced>
+            </parameter-group>
+            
+            <parameter name="deviceId" type="text" readOnly="true" groupName="device">
+                <label>Device Id</label>
+                <description>The IP address of the device.</description>
+            </parameter>
+            <parameter name="name" type="text" readOnly="true" groupName="device">
+                <label>Name</label>
+                <description>The name of the device.</description>
+            </parameter>
+            <parameter name="mac" type="text" readOnly="true" groupName="device">
+                <label>MAC</label>
+                <description>The MAC address of the device.</description>
+            </parameter>
+            <parameter name="localIp" type="text" readOnly="true" groupName="device">
+                <label>Device Id</label>
+                <description>The IP address of the device.</description>
+            </parameter>
+            
+            <parameter name="homieVersion" type="text" readOnly="true" groupName="homie">
+                <label>Homie Version</label>
+                <description>The version of implemented Homie convention.</description>
+            </parameter>
+            <parameter name="implementation" type="text" readOnly="true" groupName="homie">
+                <label>Implementation Identifier</label>
+                <description>An identifier for the Homie implementation.</description>
+            </parameter>
+            <parameter name="implementationConfig" type="text" readOnly="true" groupName="homie">
+                <label>Implementation Settings</label>
+                <description>Settings for the Homie implementation.</description>
+            </parameter>
+            
+            <parameter name="statsUptime" type="text" readOnly="true" groupName="status">
+                <label>Uptime</label>
+                <description>Time in seconds since the device is online.</description>
+            </parameter>
+            <parameter name="statsSignal" type="text" readOnly="true" groupName="status">
+                <label>Signal</label>
+                <description>Signal level in percent. Might be not supported by wired devices.</description>
+            </parameter>
+            <parameter name="statsInterval" type="text" readOnly="true" groupName="status">
+                <label>Update Interval</label>
+                <description>Interval (in seconds) at which the uptime and signal are refreshed.</description>
+            </parameter>
+            
+            <parameter name="fwName" type="text" readOnly="true" groupName="firmware">
+                <label>Name</label>
+                <description>The name of the firmware on the device.</description>
+            </parameter>
+            <parameter name="fwVersion" type="text" readOnly="true" groupName="firmware">
+                <label>Version</label>
+                <description>The version of the firmware which is installed.</description>
+            </parameter>
+            <parameter name="fwChecksum" type="text" readOnly="true" groupName="firmware">
+                <label>Checksum</label>
+                <description>MD5 checksum of the firmware running on the device.</description>
+            </parameter>
 		</config-description>
-
 	</bridge-type>
 
-	<channel-type id="homieVersion" advanced="true">
-		<item-type>String</item-type>
-		<label>Homie specification Version</label>
-		<description>Version of the Homie convention</description>
-		<state readOnly="true" />
-	</channel-type>
 
 	<channel-type id="online" advanced="true">
 		<item-type>Switch</item-type>
 		<label>Online</label>
-		<description>Indicates whether the device is online or not</description>
+		<description>Indicates whether the device is online or not.</description>
 		<state readOnly="true" />
 	</channel-type>
 
-	<channel-type id="name" advanced="true">
-		<item-type>String</item-type>
-		<label>Device Name</label>
-		<description>Name of the device</description>
-		<state readOnly="true" />
-	</channel-type>
-
-	<channel-type id="localIp" advanced="true">
-		<item-type>String</item-type>
-		<label>Device IP</label>
-		<description>IP address of the device</description>
-		<state readOnly="true" />
-	</channel-type>
-
-	<channel-type id="mac" advanced="true">
-		<item-type>String</item-type>
-		<label>Device MAC</label>
-		<description>MAC address of the device</description>
-		<state readOnly="true" />
-	</channel-type>
-
-	<channel-type id="statsUptime" advanced="true">
-		<item-type>Number</item-type>
-		<label>Uptime</label>
-		<description>Time in seconds since the device is online</description>
-		<state pattern="%d s" readOnly="true" />
-	</channel-type>
-
-	<channel-type id="statsSignal" advanced="true">
-		<item-type>Number</item-type>
-		<label>Signal</label>
-		<description>Signal level in percent. Might be not supported by wired devices</description>
-		<state pattern="%d %%" readOnly="true" />
-	</channel-type>
-
-	<channel-type id="statsInterval" advanced="true">
-		<item-type>Number</item-type>
-		<label>Update Interval</label>
-		<description>Interval (in seconds) at which the uptime and signal are refreshed</description>
-		<state pattern="%d s" readOnly="true" />
-	</channel-type>
-
-	<channel-type id="fwName" advanced="true">
-		<item-type>String</item-type>
-		<label>Firmware Name</label>
-		<description>Name of the firmware on the device</description>
-		<state readOnly="true" />
-	</channel-type>
-
-	<channel-type id="fwVersion" advanced="true">
-		<item-type>String</item-type>
-		<label>Firmware Version</label>
-		<description>Version of the firmware which is installed</description>
-		<state readOnly="true" />
-	</channel-type>
-
-	<channel-type id="fwChecksum" advanced="true">
-		<item-type>String</item-type>
-		<label>Firmware Checksum</label>
-		<description>MD5 checksum of the firmware running on the device</description>
-		<state readOnly="true" />
-	</channel-type>
-
-	<channel-type id="implementation" advanced="true">
-		<item-type>String</item-type>
-		<label>Implementation ID</label>
-		<description>An identifier for the Homie implementation</description>
-		<state readOnly="true" />
-	</channel-type>
 </thing:thing-descriptions>

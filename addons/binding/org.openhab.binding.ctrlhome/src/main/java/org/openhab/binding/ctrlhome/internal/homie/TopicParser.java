@@ -1,12 +1,10 @@
 package org.openhab.binding.ctrlhome.internal.homie;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class TopicParser {
-    private static Logger logger = LoggerFactory.getLogger(TopicParser.class);
     private String baseTopic;
+    private final String HOMIE_DEVICE_PROPERTY_CONFIG = "config";
     private final String HOMIE_DEVICE_PROPERTY_FW = "fw";
+    private final String HOMIE_DEVICE_PROPERTY_FW_CHECKSUM = "checksum";
     private final String HOMIE_DEVICE_PROPERTY_FW_NAME = "name";
     private final String HOMIE_DEVICE_PROPERTY_FW_VERSION = "version";
     private final String HOMIE_DEVICE_PROPERTY_HOMIE = "homie";
@@ -17,6 +15,7 @@ public class TopicParser {
     private final String HOMIE_DEVICE_PROPERTY_ONLINE = "online";
     private final String HOMIE_DEVICE_PROPERTY_STATS = "stats";
     private final String HOMIE_DEVICE_PROPERTY_STATS_SIGNAL = "signal";
+    private final String HOMIE_DEVICE_PROPERTY_STATS_INTERVAL = "interval";
     private final String HOMIE_DEVICE_PROPERTY_STATS_UPTIME = "uptime";
     private final String HOMIE_NODE_PROPERTY_PROPERTIES = "properties";
     private final String HOMIE_NODE_PROPERTY_TYPE = "type";
@@ -54,23 +53,35 @@ public class TopicParser {
                         topic.setDeviceMac(mqttMessage);
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_STATS)) {
-                        if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_STATS_UPTIME)) {
+                        if (elements[3].equals(HOMIE_DEVICE_PROPERTY_STATS_UPTIME)) {
                             topic.setDeviceStatsUptime(mqttMessage);
                         }
-                        if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_STATS_SIGNAL)) {
+                        if (elements[3].equals(HOMIE_DEVICE_PROPERTY_STATS_SIGNAL)) {
                             topic.setDeviceStatsSignal(mqttMessage);
+                        }
+                        if (elements[3].equals(HOMIE_DEVICE_PROPERTY_STATS_INTERVAL)) {
+                            topic.setDeviceStatsInterval(mqttMessage);
                         }
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_FW)) {
-                        if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_FW_NAME)) {
+                        if (elements[3].equals(HOMIE_DEVICE_PROPERTY_FW_NAME)) {
                             topic.setDeviceFwName(mqttMessage);
                         }
-                        if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_FW_VERSION)) {
+                        if (elements[3].equals(HOMIE_DEVICE_PROPERTY_FW_VERSION)) {
                             topic.setDeviceFwVersion(mqttMessage);
+                        }
+                        if (elements[3].equals(HOMIE_DEVICE_PROPERTY_FW_CHECKSUM)) {
+                            topic.setDeviceFwChecksum(mqttMessage);
                         }
                     }
                     if (elements[2].equals(HOMIE_PROPERTY_PREFIX + HOMIE_DEVICE_PROPERTY_IMPLEMENTATION)) {
-                        topic.setDeviceImplementation(mqttMessage);
+                        if (elements.length > 3) {
+                            if (elements[3].equals(HOMIE_DEVICE_PROPERTY_CONFIG)) {
+                                topic.setDeviceImplementationConfig(mqttMessage);
+                            }
+                        } else {
+                            topic.setDeviceImplementation(mqttMessage);
+                        }
                     }
                 } else {
                     topic.setNodeId(elements[2]);
@@ -79,7 +90,7 @@ public class TopicParser {
                             topic.setNodeType(mqttMessage);
                         }
                         if (elements[3].equals(HOMIE_PROPERTY_PREFIX + HOMIE_NODE_PROPERTY_PROPERTIES)) {
-                            topic.setProperties(mqttMessage);
+                            topic.setNodeProperties(mqttMessage);
                         }
                     }
                 }

@@ -8,6 +8,11 @@
  */
 package org.openhab.binding.ctrlhome.internal.discovery;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
@@ -30,8 +35,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService implements IMqttMessageListener {
-    private final Logger logger = LoggerFactory.getLogger(CtrlHomeBridgeDiscoveryService.class);
+    private List<Topic> bridgeTopics = new ArrayList<Topic>();
 
+    private final Logger logger = LoggerFactory.getLogger(CtrlHomeBridgeDiscoveryService.class);
     private MqttConnection mqttconnection;
     private TopicParser topicParser;
 
@@ -49,15 +55,63 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
     @Override
     public void messageArrived(String topicString, MqttMessage mqttMessage) throws Exception {
         String message = mqttMessage.toString();
-
-        logger.info(topicString);
-        logger.info(message);
         Topic topic = topicParser.parse(topicString, message);
+        boolean newTopic = true;
+
         if (topic.isBridge()) {
-            ThingUID thingId = new ThingUID(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY,
-                    topic.getDeviceId());
-            DiscoveryResult dr = DiscoveryResultBuilder.create(thingId).withLabel(message).build();
-            thingDiscovered(dr);
+            Topic bridgeTopic = topic;
+            for (Topic tempTopic : bridgeTopics) {
+                if (topic.getDeviceId().equals(tempTopic.getDeviceId())) {
+                    bridgeTopic = tempTopic;
+                    bridgeTopic.update(topic);
+                    newTopic = false;
+                    break;
+                }
+            }
+            if (newTopic) {
+                bridgeTopics.add(bridgeTopic);
+            }
+
+            if (bridgeTopic.isBridgeInit() && !bridgeTopic.isDiscovered()) {
+                logger.info("Adding new ctrlHome bridge {} with id '{}' to inbox.", bridgeTopic.getDeviceName(),
+                        bridgeTopic.getDeviceId());
+
+                Map<String, Object> properties = new HashMap<>(2);
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_DEVICE_ID, bridgeTopic.getDeviceId());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_NAME, bridgeTopic.getDeviceName());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_MAC, bridgeTopic.getDeviceMac());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_LOCAL_IP, bridgeTopic.getDeviceLocalIp());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_HOMIE_VERSION, bridgeTopic.getDeviceHomie());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_IMPLEMENTATION,
+                        bridgeTopic.getDeviceImplementation());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_IMPLEMENTATION_CONFIG,
+                        bridgeTopic.getDeviceImplementationConfig());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_UPTIME,
+                        bridgeTopic.getDeviceStatsUptime());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_INTERVAL,
+                        bridgeTopic.getDeviceStatsInterval());
+                if (bridgeTopic.getDeviceStatsSignal() != null) {
+                    properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_SIGNAL,
+                            bridgeTopic.getDeviceStatsSignal());
+                }
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_NAME, bridgeTopic.getDeviceFwName());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_VERSION, bridgeTopic.getDeviceFwVersion());
+                if (bridgeTopic.getDeviceFwChecksum() != null) {
+                    properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_CHECKSUM,
+                            bridgeTopic.getDeviceFwChecksum());
+                }
+
+                ThingUID uid = new ThingUID(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY,
+                        bridgeTopic.getDeviceId());
+                if (uid != null) {
+                    DiscoveryResult dr = DiscoveryResultBuilder.create(uid).withProperties(properties)
+                            .withThingType(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY)
+                            .withLabel(bridgeTopic.getDeviceName()).build();
+                    thingDiscovered(dr);
+
+                    bridgeTopic.setDiscovered(true);
+                }
+            }
         }
     }
 
@@ -66,6 +120,7 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
         logger.info("ctrlHome Bridge Discovery Service start scan");
 
         mqttconnection.listenForBridge(this);
+        bridgeTopics.clear();
     }
 
     @Override
@@ -74,6 +129,7 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
 
         super.stopScan();
         mqttconnection.unsubscribeListenForBridge();
+        bridgeTopics.clear();
     }
 
 }
