@@ -1,79 +1,64 @@
 package org.openhab.binding.ctrlhome.internal.homie;
 
 public class Topic {
-    private String deviceFwChecksum;
-    private String deviceFwName;
-    private String deviceFwVersion;
-    private String deviceHomie;
+    private String fwChecksum;
+    private String fwName;
+    private String fwVersion;
+    private String homie;
     private String deviceId;
-    private String deviceImplementation;
-    private String deviceImplementationConfig;
-    private String deviceLocalIp;
-    private String deviceMac;
-    private String deviceName;
-    private String deviceOnline;
-    private String deviceStatsInterval;
-    private String deviceStatsSignal;
-    private String deviceStatsUptime;
-    private boolean discovered = false;
+    private String implementation;
+    private String implementationConfig;
+    private String localIp;
+    private String mac;
+    private String name;
+    private String online;
+    private String statsInterval;
+    private String statsSignal;
+    private String statsUptime;
+    private boolean bridgeDiscovered = false;
+    private boolean nodeDiscovered = false;
     private String nodeId;
     private String nodeProperties;
     private String nodeType;
-
-    public String getDeviceFwChecksum() {
-        return deviceFwChecksum;
-    }
-
-    public String getDeviceFwName() {
-        return deviceFwName;
-    }
-
-    public String getDeviceFwVersion() {
-        return deviceFwVersion;
-    }
-
-    public String getDeviceHomie() {
-        return deviceHomie;
-    }
 
     public String getDeviceId() {
         return deviceId;
     }
 
-    public String getDeviceImplementation() {
-        return deviceImplementation;
+    public String getFwChecksum() {
+        return fwChecksum;
     }
 
-    public String getDeviceImplementationConfig() {
-        return deviceImplementationConfig;
+    public String getFwName() {
+        return fwName;
     }
 
-    public String getDeviceLocalIp() {
-        return deviceLocalIp;
+    public String getFwVersion() {
+        return fwVersion;
     }
 
-    public String getDeviceMac() {
-        return deviceMac;
+    public String getHomie() {
+        return homie;
     }
 
-    public String getDeviceName() {
-        return deviceName;
+    public String getImplementation() {
+        return implementation;
     }
 
-    public String getDeviceOnline() {
-        return deviceOnline;
+    public String getImplementationConfig() {
+        return implementationConfig;
     }
 
-    public String getDeviceStatsInterval() {
-        return deviceStatsInterval;
+    public String getLocalIp() {
+        return localIp;
     }
 
-    public String getDeviceStatsSignal() {
-        return deviceStatsSignal;
+    public String getMac() {
+        return mac;
     }
 
-    public String getDeviceStatsUptime() {
-        return deviceStatsUptime;
+    public String getName() {
+        return name;
     }
 
     public String getNodeId() {
@@ -88,6 +73,22 @@ public class Topic {
         return nodeType;
     }
 
+    public String getOnline() {
+        return online;
+    }
+
+    public String getStatsInterval() {
+        return statsInterval;
+    }
+
+    public String getStatsSignal() {
+        return statsSignal;
+    }
+
+    public String getStatsUptime() {
+        return statsUptime;
+    }
+
     public boolean isBridge() {
         if (deviceId != null && nodeId == null) {
             return true;
@@ -97,35 +98,44 @@ public class Topic {
 
     }
 
+    public boolean isBridgeDiscovered() {
+        return bridgeDiscovered;
+    }
+
     public boolean isBridgeInit() {
-        if (getDeviceId() != null && getDeviceName() != null && getDeviceFwName() != null
-                && getDeviceFwVersion() != null && getDeviceHomie() != null && getDeviceImplementation() != null
-                && getDeviceImplementationConfig() != null && getDeviceLocalIp() != null && getDeviceMac() != null
-                && getDeviceStatsInterval() != null && getDeviceStatsUptime() != null) {
+        if (getDeviceId() != null && getName() != null && getFwChecksum() != null && getFwName() != null
+                && getFwVersion() != null && getHomie() != null && getImplementation() != null
+                && getImplementationConfig() != null && getLocalIp() != null && getMac() != null
+                && getStatsInterval() != null && getStatsUptime() != null) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean isDiscovered() {
-        return discovered;
+    public boolean isNode() {
+        if (deviceId != null && nodeId != null) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
-    public void setDeviceFwChecksum(String checksum) {
-        this.deviceFwChecksum = checksum;
+    public boolean isNodeDiscovered() {
+        return nodeDiscovered;
     }
 
-    public void setDeviceFwName(String deviceFwName) {
-        this.deviceFwName = deviceFwName;
+    public boolean isNodeInit() {
+        if (getDeviceId() != null && getNodeId() != null && getNodeProperties() != null && getNodeType() != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void setDeviceFwVersion(String deviceFwVersion) {
-        this.deviceFwVersion = deviceFwVersion;
-    }
-
-    public void setDeviceHomie(String deviceHomie) {
-        this.deviceHomie = deviceHomie;
+    public void setBridgeDiscovered(boolean discovered) {
+        this.bridgeDiscovered = discovered;
     }
 
     public void setDeviceId(String deviceId) {
@@ -133,45 +143,45 @@ public class Topic {
 
     }
 
-    public void setDeviceImplementation(String deviceImplementation) {
-        this.deviceImplementation = deviceImplementation;
+    public void setFwChecksum(String checksum) {
+        this.fwChecksum = checksum;
+    }
+
+    public void setFwName(String fwName) {
+        this.fwName = fwName;
+    }
+
+    public void setFwVersion(String fwVersion) {
+        this.fwVersion = fwVersion;
+    }
+
+    public void setHomie(String homie) {
+        this.homie = homie;
+    }
+
+    public void setImplementation(String implementation) {
+        this.implementation = implementation;
 
     }
 
-    public void setDeviceImplementationConfig(String config) {
-        this.deviceImplementationConfig = config;
+    public void setImplementationConfig(String config) {
+        this.implementationConfig = config;
     }
 
-    public void setDeviceLocalIp(String deviceLocalIp) {
-        this.deviceLocalIp = deviceLocalIp;
+    public void setLocalIp(String localIp) {
+        this.localIp = localIp;
     }
 
-    public void setDeviceMac(String deviceMac) {
-        this.deviceMac = deviceMac;
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDeviceOnline(String deviceOnline) {
-        this.deviceOnline = deviceOnline;
-    }
-
-    public void setDeviceStatsInterval(String interval) {
-        this.deviceStatsInterval = interval;
-    }
-
-    public void setDeviceStatsSignal(String deviceStatsSignal) {
-        this.deviceStatsSignal = deviceStatsSignal;
-    }
-
-    public void setDeviceStatsUptime(String deviceStatsUptime) {
-        this.deviceStatsUptime = deviceStatsUptime;
-    }
-
-    public void setDiscovered(boolean discovered) {
-        this.discovered = discovered;
+    public void setNodeDiscovered(boolean discovered) {
+        this.nodeDiscovered = discovered;
     }
 
     public void setNodeId(String nodeId) {
@@ -186,45 +196,61 @@ public class Topic {
         this.nodeType = nodeType;
     }
 
+    public void setOnline(String online) {
+        this.online = online;
+    }
+
+    public void setStatsInterval(String interval) {
+        this.statsInterval = interval;
+    }
+
+    public void setStatsSignal(String statsSignal) {
+        this.statsSignal = statsSignal;
+    }
+
+    public void setStatsUptime(String statsUptime) {
+        this.statsUptime = statsUptime;
+    }
+
     public void update(Topic topic) {
-        if (topic.getDeviceFwChecksum() != null) {
-            this.setDeviceFwChecksum(topic.getDeviceFwChecksum());
+        if (topic.getFwChecksum() != null) {
+            this.setFwChecksum(topic.getFwChecksum());
         }
-        if (topic.getDeviceFwName() != null) {
-            this.setDeviceFwName(topic.getDeviceFwName());
+        if (topic.getFwName() != null) {
+            this.setFwName(topic.getFwName());
         }
-        if (topic.getDeviceFwVersion() != null) {
-            this.setDeviceFwVersion(topic.getDeviceFwVersion());
+        if (topic.getFwVersion() != null) {
+            this.setFwVersion(topic.getFwVersion());
         }
-        if (topic.getDeviceHomie() != null) {
-            this.setDeviceHomie(topic.getDeviceHomie());
+        if (topic.getHomie() != null) {
+            this.setHomie(topic.getHomie());
         }
-        if (topic.getDeviceImplementation() != null) {
-            this.setDeviceImplementation(topic.getDeviceImplementation());
+        if (topic.getImplementation() != null) {
+            this.setImplementation(topic.getImplementation());
         }
-        if (topic.getDeviceImplementationConfig() != null) {
-            this.setDeviceImplementationConfig(topic.getDeviceImplementationConfig());
+        if (topic.getImplementationConfig() != null) {
+            this.setImplementationConfig(topic.getImplementationConfig());
         }
-        if (topic.getDeviceLocalIp() != null) {
-            this.setDeviceLocalIp(topic.getDeviceLocalIp());
+        if (topic.getLocalIp() != null) {
+            this.setLocalIp(topic.getLocalIp());
         }
-        if (topic.getDeviceMac() != null) {
-            this.setDeviceMac(topic.getDeviceMac());
+        if (topic.getMac() != null) {
+            this.setMac(topic.getMac());
         }
-        if (topic.getDeviceName() != null) {
-            this.setDeviceName(topic.getDeviceName());
+        if (topic.getName() != null) {
+            this.setName(topic.getName());
         }
-        if (topic.getDeviceOnline() != null) {
-            this.setDeviceOnline(topic.getDeviceOnline());
+        if (topic.getOnline() != null) {
+            this.setOnline(topic.getOnline());
         }
-        if (topic.getDeviceStatsInterval() != null) {
-            this.setDeviceStatsInterval(topic.getDeviceStatsInterval());
+        if (topic.getStatsInterval() != null) {
+            this.setStatsInterval(topic.getStatsInterval());
         }
-        if (topic.getDeviceStatsSignal() != null) {
-            this.setDeviceStatsSignal(topic.getDeviceStatsSignal());
+        if (topic.getStatsSignal() != null) {
+            this.setStatsSignal(topic.getStatsSignal());
         }
-        if (topic.getDeviceStatsUptime() != null) {
-            this.setDeviceStatsUptime(topic.getDeviceStatsUptime());
+        if (topic.getStatsUptime() != null) {
+            this.setStatsUptime(topic.getStatsUptime());
         }
         if (topic.getNodeProperties() != null) {
             this.setNodeProperties(topic.getNodeProperties());
@@ -233,4 +259,5 @@ public class Topic {
             this.setNodeType(topic.getNodeType());
         }
     }
+
 }

@@ -7,7 +7,7 @@
  */
 package org.openhab.binding.ctrlhome.handler;
 
-import static org.openhab.binding.ctrlhome.CtrlHomeBindingConstants.*;
+import static org.openhab.binding.ctrlhome.CtrlHomeBindingConstants.CHANNEL_1;
 
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
@@ -18,22 +18,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link CtrlHomeThingHandler} is responsible for handling commands, which are
+ * The {@link CtrlHomeDeviceHandler} is responsible for handling commands, which are
  * sent to one of the channels.
- * 
+ *
  * @author Luka Bartonicek - Initial contribution
  */
-public class CtrlHomeThingHandler extends BaseThingHandler {
+public class CtrlHomeDeviceHandler extends BaseThingHandler {
 
-    private Logger logger = LoggerFactory.getLogger(CtrlHomeThingHandler.class);
+    private Logger logger = LoggerFactory.getLogger(CtrlHomeDeviceHandler.class);
 
-	public CtrlHomeThingHandler(Thing thing) {
-		super(thing);
-	}
+    public CtrlHomeDeviceHandler(Thing thing) {
+        super(thing);
+    }
 
-	@Override
-	public void handleCommand(ChannelUID channelUID, Command command) {
-        if(channelUID.getId().equals(CHANNEL_1)) {
+    @Override
+    public void handleCommand(ChannelUID channelUID, Command command) {
+        if (channelUID.getId().equals(CHANNEL_1)) {
             // TODO: handle command
 
             // Note: if communication with thing fails for some reason,
@@ -41,7 +41,7 @@ public class CtrlHomeThingHandler extends BaseThingHandler {
             // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
             // "Could not control device at IP address x.x.x.x");
         }
-	}
+    }
 
     @Override
     public void initialize() {

@@ -8,9 +8,26 @@
  */
 package org.openhab.binding.ctrlhome.internal.discovery;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
+import org.eclipse.smarthome.config.discovery.DiscoveryResult;
+import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
+import org.eclipse.smarthome.core.thing.Bridge;
+import org.eclipse.smarthome.core.thing.ThingTypeUID;
+import org.eclipse.smarthome.core.thing.ThingUID;
+import org.openhab.binding.ctrlhome.CtrlHomeBindingConstants;
+import org.openhab.binding.ctrlhome.handler.CtrlHomeBridgeHandler;
+import org.openhab.binding.ctrlhome.internal.config.CtrlHomeConfiguration;
+import org.openhab.binding.ctrlhome.internal.homie.Topic;
+import org.openhab.binding.ctrlhome.internal.homie.TopicParser;
+import org.openhab.binding.ctrlhome.internal.mqtt.MqttConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,98 +38,119 @@ import org.slf4j.LoggerFactory;
  * @author Luka Bartonicek - Initial contribution
  */
 public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService implements IMqttMessageListener {
-
-    private final static int SEARCH_TIME = 60;
-
     private final Logger logger = LoggerFactory.getLogger(CtrlHomeDeviceDiscoveryService.class);
 
-    public CtrlHomeDeviceDiscoveryService(int timeout) throws IllegalArgumentException {
-        super(timeout);
-        // TODO Auto-generated constructor stub
+    private CtrlHomeBridgeHandler bridgeHandler;
+    private List<Topic> deviceTopics = new ArrayList<Topic>();
+    private MqttConnection mqttconnection;
+    private TopicParser topicParser;
+
+    public CtrlHomeDeviceDiscoveryService(CtrlHomeConfiguration configuration, CtrlHomeBridgeHandler bridgeHandler) {
+        super(CtrlHomeBindingConstants.SUPPORTED_DEVICE_THING_TYPES_UIDS,
+                CtrlHomeBindingConstants.DEVICE_DISCOVERY_TIMEOUT_SECONDS, true);
+
+        logger.info("ctrlHome Device Discovery Service started");
+
+        this.bridgeHandler = bridgeHandler;
+        mqttconnection = new MqttConnection(configuration, this);
+        topicParser = new TopicParser(configuration.getBaseTopic());
     }
 
-    // private MaxCubeBridgeHandler maxCubeBridgeHandler;
-    //
-    // public CtrlHomeDeviceDiscoveryService(MaxCubeBridgeHandler maxCubeBridgeHandler) {
-    // super(MaxBinding.SUPPORTED_DEVICE_THING_TYPES_UIDS, SEARCH_TIME, true);
-    // this.maxCubeBridgeHandler = maxCubeBridgeHandler;
-    // }
-    //
-    // public void activate() {
-    // maxCubeBridgeHandler.registerDeviceStatusListener(this);
-    // }
-    //
-    // @Override
-    // public void deactivate() {
-    // maxCubeBridgeHandler.unregisterDeviceStatusListener(this);
-    // removeOlderResults(new Date().getTime());
-    // }
-    //
-    // @Override
-    // public Set<ThingTypeUID> getSupportedThingTypes() {
-    // return MaxBinding.SUPPORTED_DEVICE_THING_TYPES_UIDS;
-    // }
-    //
-    // @Override
-    // public void onDeviceAdded(Bridge bridge, Device device) {
-    // logger.trace("Adding new MAX! {} with id '{}' to smarthome inbox", device.getType(), device.getSerialNumber());
-    // ThingUID thingUID = null;
-    // switch (device.getType()) {
-    // case WallMountedThermostat:
-    // thingUID = new ThingUID(MaxBinding.WALLTHERMOSTAT_THING_TYPE, bridge.getUID(),
-    // device.getSerialNumber());
-    // break;
-    // case HeatingThermostat:
-    // thingUID = new ThingUID(MaxBinding.HEATINGTHERMOSTAT_THING_TYPE, bridge.getUID(),
-    // device.getSerialNumber());
-    // break;
-    // case HeatingThermostatPlus:
-    // thingUID = new ThingUID(MaxBinding.HEATINGTHERMOSTATPLUS_THING_TYPE, bridge.getUID(),
-    // device.getSerialNumber());
-    // break;
-    // case ShutterContact:
-    // thingUID = new ThingUID(MaxBinding.SHUTTERCONTACT_THING_TYPE, bridge.getUID(),
-    // device.getSerialNumber());
-    // break;
-    // case EcoSwitch:
-    // thingUID = new ThingUID(MaxBinding.ECOSWITCH_THING_TYPE, bridge.getUID(), device.getSerialNumber());
-    // break;
-    // default:
-    // break;
-    // }
-    // if (thingUID != null) {
-    // String name = device.getName();
-    // if (name.isEmpty()) {
-    // name = device.getSerialNumber();
-    // }
-    // DiscoveryResult discoveryResult = DiscoveryResultBuilder.create(thingUID)
-    // .withProperty(MaxBinding.PROPERTY_SERIAL_NUMBER, device.getSerialNumber())
-    // .withBridge(bridge.getUID()).withLabel(device.getType() + ": " + name)
-    // .withRepresentationProperty(MaxBinding.PROPERTY_SERIAL_NUMBER).build();
-    // thingDiscovered(discoveryResult);
-    // } else {
-    // logger.debug("Discovered MAX! device is unsupported: type '{}' with id '{}'", device.getType(),
-    // device.getSerialNumber());
-    // }
-    // }
-    //
-    // @Override
-    // protected void startScan() {
-    // if (maxCubeBridgeHandler != null) {
-    // maxCubeBridgeHandler.clearDeviceList();
-    // maxCubeBridgeHandler.deviceInclusion();
-    // }
-    // }
+    public void activate() {
+        startScan();
+    }
 
     @Override
-    public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
-        // TODO Auto-generated method stub
+    public void deactivate() {
+        stopScan();
+    }
 
+    @Override
+    public Set<ThingTypeUID> getSupportedThingTypes() {
+        return CtrlHomeBindingConstants.SUPPORTED_DEVICE_THING_TYPES_UIDS;
+    }
+
+    @Override
+    public void messageArrived(String topicString, MqttMessage mqttMessage) throws Exception {
+        String message = mqttMessage.toString();
+        Topic topic = topicParser.parse(topicString, message);
+        boolean newTopic = true;
+
+        if (topic.isNode()) {
+            Topic deviceTopic = topic;
+            for (Topic tempTopic : deviceTopics) {
+                if (topic.getNodeId().equals(tempTopic.getNodeId())) {
+                    deviceTopic = tempTopic;
+                    deviceTopic.update(topic);
+                    newTopic = false;
+                    break;
+                }
+            }
+            if (newTopic) {
+                deviceTopics.add(deviceTopic);
+            }
+
+            if (deviceTopic.isNodeInit() && !deviceTopic.isNodeDiscovered()) {
+                Bridge bridge = bridgeHandler.getThing();
+                String implementationConfig = bridge.getConfiguration().getProperties()
+                        .get(CtrlHomeBindingConstants.PROPERTY_BRIDGE_IMPLEMENTATION_CONFIG).toString();
+                ThingTypeUID thingType = null;
+                Map<String, Object> properties = new HashMap<>(2);
+                String label = "";
+
+                for (String remoteId : topicParser.getRemoteIds(deviceTopic.getNodeType(), implementationConfig)) {
+                    logger.info("Adding new ctrlHome device {} with id '{}' and remote id '{}' to inbox.",
+                            deviceTopic.getName(), deviceTopic.getNodeId(), remoteId);
+
+                    if (deviceTopic.getNodeType().equals(CtrlHomeBindingConstants.DEVICE_LIVOLO_SWITCH)) {
+                        properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_REMOTE_ID, remoteId);
+                        thingType = CtrlHomeBindingConstants.THING_TYPE_LIVOLO_SWITCH;
+                        label = CtrlHomeBindingConstants.LABEL_DEVICE_LIVOLO_SWITCH;
+
+                    } else if (deviceTopic.getNodeType().equals(CtrlHomeBindingConstants.DEVICE_LIVOLO_DIMMER)) {
+                        properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_REMOTE_ID, remoteId);
+                        thingType = CtrlHomeBindingConstants.THING_TYPE_LIVOLO_DIMMER;
+                        label = CtrlHomeBindingConstants.LABEL_DEVICE_LIVOLO_DIMMER;
+                    } else if (deviceTopic.getNodeType().equals(CtrlHomeBindingConstants.DEVICE_LIVOLO_ROLLERSHUTTER)) {
+                        List<String> remotePairIds = topicParser.getRemotePairdIds(remoteId);
+                        if (remotePairIds.size() > 1) {
+                            properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_REMOTE_ID_UP, remotePairIds.get(0));
+                            properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_REMOTE_ID_DOWN,
+                                    remotePairIds.get(1));
+                        }
+                        properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_REMOTE_ID, remoteId);
+                        thingType = CtrlHomeBindingConstants.THING_TYPE_LIVOLO_ROLLERSHUTTER;
+                        label = CtrlHomeBindingConstants.LABEL_DEVICE_LIVOLO_ROLLERSHUTTER;
+                    }
+                    label += " - remote Id:" + remoteId;
+                    String deviceId = deviceTopic.getDeviceId() + deviceTopic.getNodeId() + remoteId;
+                    ThingUID uid = new ThingUID(thingType, String.valueOf(deviceId.hashCode()));
+                    if (uid != null) {
+                        DiscoveryResult dr = DiscoveryResultBuilder.create(uid).withProperties(properties)
+                                .withLabel(label).withBridge(bridge.getUID()).withThingType(thingType).build();
+                        thingDiscovered(dr);
+                    }
+                }
+                deviceTopic.setNodeDiscovered(true);
+            }
+        }
     }
 
     @Override
     protected void startScan() {
-        // TODO Auto-generated method stub
+        logger.info("ctrlHome Device Discovery Service start scan");
 
+        mqttconnection.listenForDevices(bridgeHandler.getThing().getConfiguration().getProperties()
+                .get(CtrlHomeBindingConstants.PROPERTY_BRIDGE_DEVICE_ID).toString(), this);
+        deviceTopics.clear();
+    }
+
+    @Override
+    protected synchronized void stopScan() {
+        logger.info("ctrlHome Device Discovery Service stop scan");
+
+        super.stopScan();
+        mqttconnection.unsubscribeListenForBridge();
+        deviceTopics.clear();
     }
 }

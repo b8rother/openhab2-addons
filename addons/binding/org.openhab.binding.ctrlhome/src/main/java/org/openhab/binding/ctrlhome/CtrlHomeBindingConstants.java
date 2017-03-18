@@ -31,9 +31,15 @@ public class CtrlHomeBindingConstants {
 
     // List of device types
     public static final String  BRIDGE_CTRLHOME_GATEWAY                 = "bridge";
-    public static final String  DEVICE_LIVOLO_DIMMER                    = "livoloDimmer";
-    public static final String  DEVICE_LIVOLO_ROLLERSHUTTER             = "livoloRollershutter";
-    public static final String  DEVICE_LIVOLO_SWITCH                    = "livoloSwitch";
+    public static final String  DEVICE_LIVOLO_DIMMER                    = "livolodimmer";
+    public static final String  DEVICE_LIVOLO_ROLLERSHUTTER             = "livolorollershutter";
+    public static final String  DEVICE_LIVOLO_SWITCH                    = "livoloswitch";
+
+    // List of device labels
+    public static final String  LABEL_BRIDGE_CTRLHOME_GATEWAY           = "ctrlHome Gateway";
+    public static final String  LABEL_DEVICE_LIVOLO_DIMMER              = "ctrlHome Livolo Dimmer";
+    public static final String  LABEL_DEVICE_LIVOLO_ROLLERSHUTTER       = "ctrlHome Livolo Rollershutter";
+    public static final String  LABEL_DEVICE_LIVOLO_SWITCH              = "ctrlHome Livolo Switch";
 
     // Binding Properties
     public final static String PROPERTY_BINDING_MQTT_BROKER_URL         = "mqttBrokerUrl";
@@ -54,6 +60,11 @@ public class CtrlHomeBindingConstants {
     public final static String PROPERTY_BRIDGE_FW_VERSION               = "fwVersion";
     public final static String PROPERTY_BRIDGE_FW_CHECKSUM              = "fwChecksum";
 
+    // Device Properties
+    public final static String PROPERTY_DEVICE_REMOTE_ID                = "remoteId";
+    public final static String PROPERTY_DEVICE_REMOTE_ID_UP             = "remoteIdUp";
+    public final static String PROPERTY_DEVICE_REMOTE_ID_DOWN           = "remoteIdDown";
+
     // MQTT fixed config
     public static final String  MQTT_CLIENT_ID_DELIMITER                = "_";
     public static final String  MQTT_CLIENT_ID_PREFIX                   = "ctrlHomeOH2";
@@ -68,6 +79,7 @@ public class CtrlHomeBindingConstants {
 
     // Discovery timeout
     public final static int BRIDGE_DISCOVERY_TIMEOUT_SECONDS            = 30;
+    public final static int DEVICE_DISCOVERY_TIMEOUT_SECONDS            = 30;
 
     // Collections of supported devices
     public final static Collection<ThingTypeUID> SUPPORTED_ALL_THING_TYPES_UIDS = Lists.newArrayList(

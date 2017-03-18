@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
+import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.openhab.binding.ctrlhome.CtrlHomeBindingConstants;
 import org.openhab.binding.ctrlhome.internal.config.CtrlHomeConfiguration;
@@ -35,9 +37,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService implements IMqttMessageListener {
-    private List<Topic> bridgeTopics = new ArrayList<Topic>();
-
     private final Logger logger = LoggerFactory.getLogger(CtrlHomeBridgeDiscoveryService.class);
+
+    private List<Topic> bridgeTopics = new ArrayList<Topic>();
     private MqttConnection mqttconnection;
     private TopicParser topicParser;
 
@@ -50,6 +52,11 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
         mqttconnection = new MqttConnection(configuration, this);
         topicParser = new TopicParser(configuration.getBaseTopic());
 
+    }
+
+    @Override
+    public Set<ThingTypeUID> getSupportedThingTypes() {
+        return CtrlHomeBindingConstants.SUPPORTED_BRIDGE_THING_TYPES_UIDS;
     }
 
     @Override
@@ -72,44 +79,41 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
                 bridgeTopics.add(bridgeTopic);
             }
 
-            if (bridgeTopic.isBridgeInit() && !bridgeTopic.isDiscovered()) {
-                logger.info("Adding new ctrlHome bridge {} with id '{}' to inbox.", bridgeTopic.getDeviceName(),
+            if (bridgeTopic.isBridgeInit() && !bridgeTopic.isBridgeDiscovered()) {
+                logger.info("Adding new ctrlHome bridge {} with id '{}' to inbox.", bridgeTopic.getName(),
                         bridgeTopic.getDeviceId());
 
                 Map<String, Object> properties = new HashMap<>(2);
                 properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_DEVICE_ID, bridgeTopic.getDeviceId());
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_NAME, bridgeTopic.getDeviceName());
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_MAC, bridgeTopic.getDeviceMac());
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_LOCAL_IP, bridgeTopic.getDeviceLocalIp());
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_HOMIE_VERSION, bridgeTopic.getDeviceHomie());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_NAME, bridgeTopic.getName());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_MAC, bridgeTopic.getMac());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_LOCAL_IP, bridgeTopic.getLocalIp());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_HOMIE_VERSION, bridgeTopic.getHomie());
                 properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_IMPLEMENTATION,
-                        bridgeTopic.getDeviceImplementation());
+                        bridgeTopic.getImplementation());
                 properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_IMPLEMENTATION_CONFIG,
-                        bridgeTopic.getDeviceImplementationConfig());
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_UPTIME,
-                        bridgeTopic.getDeviceStatsUptime());
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_INTERVAL,
-                        bridgeTopic.getDeviceStatsInterval());
-                if (bridgeTopic.getDeviceStatsSignal() != null) {
-                    properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_SIGNAL,
-                            bridgeTopic.getDeviceStatsSignal());
+                        bridgeTopic.getImplementationConfig());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_UPTIME, bridgeTopic.getStatsUptime());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_INTERVAL, bridgeTopic.getStatsInterval());
+                if (bridgeTopic.getStatsSignal() != null) {
+                    properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_STATS_SIGNAL, bridgeTopic.getStatsSignal());
                 }
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_NAME, bridgeTopic.getDeviceFwName());
-                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_VERSION, bridgeTopic.getDeviceFwVersion());
-                if (bridgeTopic.getDeviceFwChecksum() != null) {
-                    properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_CHECKSUM,
-                            bridgeTopic.getDeviceFwChecksum());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_NAME, bridgeTopic.getFwName());
+                properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_VERSION, bridgeTopic.getFwVersion());
+                if (bridgeTopic.getFwChecksum() != null) {
+                    properties.put(CtrlHomeBindingConstants.PROPERTY_BRIDGE_FW_CHECKSUM, bridgeTopic.getFwChecksum());
                 }
 
                 ThingUID uid = new ThingUID(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY,
                         bridgeTopic.getDeviceId());
+                String label = CtrlHomeBindingConstants.LABEL_BRIDGE_CTRLHOME_GATEWAY;
                 if (uid != null) {
                     DiscoveryResult dr = DiscoveryResultBuilder.create(uid).withProperties(properties)
-                            .withThingType(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY)
-                            .withLabel(bridgeTopic.getDeviceName()).build();
+                            .withThingType(CtrlHomeBindingConstants.THING_TYPE_CTRLHOME_BRIDGE_GATEWAY).withLabel(label)
+                            .build();
                     thingDiscovered(dr);
 
-                    bridgeTopic.setDiscovered(true);
+                    bridgeTopic.setBridgeDiscovered(true);
                 }
             }
         }

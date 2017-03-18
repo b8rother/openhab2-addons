@@ -146,4 +146,12 @@ public class MqttConnection {
 
     }
 
+    public void unsubscribeListenForDevices() {
+        try {
+            client.unsubscribe(listenDeviceTopic);
+        } catch (MqttException e) {
+            logger.error("Failed to unsubscribe from topic " + listenDeviceTopic, e);
+        }
+
+    }
 }

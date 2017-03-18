@@ -3,27 +3,109 @@
 	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-	<thing-type id="livoloSwitch">
+	<thing-type id="livoloswitch">
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="bridge" />
 		</supported-bridge-type-refs>
 
-		<label>ctrlHome Livolo switch</label>
-		<description>This is a ctrlHome ON/OFF Livolo switch</description>
+		<label>Device: ctrlHome Livolo Switch</label>
+		<description>This is a ctrlHome Livolo switch.</description>
 
 		<channels>
-			<channel id="remoteId" typeId="remoteId" />
 			<channel id="switchState" typeId="switchState" />
 		</channels>
+		
+		<config-description>
+            <parameter-group name="device">
+                <label>Device Settings</label>
+                <description>Device parameter settings</description>
+                <advanced>true</advanced>
+            </parameter-group>
+            
+            <parameter name="room" type="text" required="false" groupName="device">
+                <label>Room</label>
+                <description>The room name.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="name" type="text" required="false" groupName="device">
+                <label>Device Name</label>
+                <description>The device description.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="remoteId" type="text" required="true" groupName="device">
+                <label>Remote Id</label>
+                <description>Remote id of the Livolo device.</description>
+                <advanced>true</advanced>
+            </parameter>
+        </config-description>
 	</thing-type>
+	
+	<thing-type id="livolodimmer">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="bridge" />
+        </supported-bridge-type-refs>
 
-	<channel-type id="remoteId" advanced="true">
-		<item-type>Number</item-type>
-		<label>Remote Id</label>
-		<description>Remote id of the switch</description>
-		<state pattern="%d" readOnly="true">
-		</state>
-	</channel-type>
+        <label>Device: ctrlHome Livolo Dimmer</label>
+        <description>This is a ctrlHome Livolo dimmer.</description>
+
+        <channels>
+            <channel id="switchState" typeId="switchState" />
+        </channels>
+        
+        <config-description>
+            <parameter name="room" type="text" required="false" groupName="device">
+                <label>Room</label>
+                <description>The room name.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="name" type="text" required="false" groupName="device">
+                <label>Device Name</label>
+                <description>The device description.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="remoteId" type="text" required="true" groupName="device">
+                <label>Remote Id</label>
+                <description>Remote id of the Livolo device.</description>
+                <advanced>true</advanced>
+            </parameter>
+        </config-description>
+    </thing-type>
+    
+    <thing-type id="livolorollershutter">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="bridge" />
+        </supported-bridge-type-refs>
+
+        <label>Device: ctrlHome Livolo Rollershutter</label>
+        <description>This is a ctrlHome Livolo rollershutter.</description>
+
+        <channels>
+            <channel id="switchState" typeId="switchState" />
+        </channels>
+        
+        <config-description>
+            <parameter name="room" type="text" required="false" groupName="device">
+                <label>Room</label>
+                <description>The room name.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="name" type="text" required="false" groupName="device">
+                <label>Device Name</label>
+                <description>The device description.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="remoteIdUp" type="text" required="true" groupName="device">
+                <label>Remote Id Up Switch</label>
+                <description>Remote id of the Livolo rollershutter up switch.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="remoteIdDown" type="text" required="true" groupName="device">
+                <label>Remote Id Down Switch</label>
+                <description>Remote id of the Livolo rollershutter down switch.</description>
+                <advanced>true</advanced>
+            </parameter>
+        </config-description>
+    </thing-type>
 
 	<channel-type id="switchState">
 		<item-type>Switch</item-type>

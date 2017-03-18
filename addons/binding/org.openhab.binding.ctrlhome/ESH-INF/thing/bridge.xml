@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<thing:thing-descriptions bindingId="homematic" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<thing:thing-descriptions bindingId="ctrlhome" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
 	<bridge-type id="bridge">
-		<label>ctrlHome gateway</label>
-		<description>This bridge represents the ctrlHome gateway.</description>
+		<label>Bridge: ctrlHome Gateway</label>
+		<description>This bridge represents the gateway for the ctrlHome devices.</description>
 
 		<channels>
 			<channel id="online" typeId="online" />
