@@ -26,9 +26,6 @@ public class CtrlHomeBindingConstants {
 
     public static final String BINDING_ID                               = "ctrlhome";
 
-    // List of all Channel ids
-    public final static String CHANNEL_1                                = "channel1";
-
     // List of device types
     public static final String  BRIDGE_CTRLHOME_GATEWAY                 = "bridge";
     public static final String  DEVICE_LIVOLO_CONFIGURATOR              = "livoloconf";
@@ -68,6 +65,11 @@ public class CtrlHomeBindingConstants {
     public final static String PROPERTY_DEVICE_REMOTE_ID                = "remoteId";
     public final static String PROPERTY_DEVICE_REMOTE_ID_UP             = "remoteIdUp";
     public final static String PROPERTY_DEVICE_REMOTE_ID_DOWN           = "remoteIdDown";
+
+    // List of all Channel ids
+    public final static String CHANNEL_CONFIG_COMMAND                   = "configCommand";
+    public final static String CHANNEL_CONFIG_REMOTE_ID                 = "configRemoteId";
+    public final static String CHANNEL_SWITCH_STATE                     = "switchState";
 
     // MQTT fixed config
     public static final String  MQTT_CLIENT_ID_DELIMITER                = "_";

@@ -7,8 +7,6 @@
  */
 package org.openhab.binding.ctrlhome.handler;
 
-import static org.openhab.binding.ctrlhome.CtrlHomeBindingConstants.CHANNEL_1;
-
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -50,13 +48,17 @@ public class CtrlHomeDeviceHandler extends BaseThingHandler implements IMqttMess
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        if (channelUID.getId().equals(CHANNEL_1)) {
+        if (channelUID.getId().equals(CtrlHomeBindingConstants.CHANNEL_CONFIG_COMMAND)) {
             // TODO: handle command
 
             // Note: if communication with thing fails for some reason,
             // indicate that by setting the status with detail information
             // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
             // "Could not control device at IP address x.x.x.x");
+        } else if (channelUID.getId().equals(CtrlHomeBindingConstants.CHANNEL_CONFIG_REMOTE_ID)) {
+
+        } else if (channelUID.getId().equals(CtrlHomeBindingConstants.CHANNEL_SWITCH_STATE)) {
+
         }
     }
 

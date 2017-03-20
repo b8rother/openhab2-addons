@@ -12,8 +12,8 @@
         <description>This is a ctrlHome Livolo configuration Tool device.</description>
 
         <channels>
-            <channel id="commandConf" typeId="commandConf" />
-            <channel id="remoteIdConf" typeId="remoteIdConf" />
+            <channel id="configCommand" typeId="configCommand" />
+            <channel id="configRemoteId" typeId="configRemoteId" />
         </channels>
     </thing-type>
 
@@ -127,12 +127,12 @@
 		<description>On/off status of the switch.</description>
 		<category>Switch</category>
 	</channel-type>
-	<channel-type id="commandConf">
+	<channel-type id="configCommand">
         <item-type>String</item-type>
         <label>Command</label>
         <description>Livolo configuration command.</description>
     </channel-type>
-    <channel-type id="remoteIdConf">
+    <channel-type id="configRemoteId">
         <item-type>String</item-type>
         <label>Remote Id</label>
         <description>Livolo configuration remote id.</description>
