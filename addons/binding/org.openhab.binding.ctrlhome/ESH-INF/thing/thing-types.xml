@@ -3,6 +3,20 @@
 	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
+    <thing-type id="livoloconf">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="bridge" />
+        </supported-bridge-type-refs>
+
+        <label>Device: ctrlHome Livolo Configurator</label>
+        <description>This is a ctrlHome Livolo configuration Tool device.</description>
+
+        <channels>
+            <channel id="commandConf" typeId="commandConf" />
+            <channel id="remoteIdConf" typeId="remoteIdConf" />
+        </channels>
+    </thing-type>
+
 	<thing-type id="livoloswitch">
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="bridge" />
@@ -110,8 +124,18 @@
 	<channel-type id="switchState">
 		<item-type>Switch</item-type>
 		<label>Switch State</label>
-		<description>On/off status of the switch</description>
+		<description>On/off status of the switch.</description>
 		<category>Switch</category>
 	</channel-type>
+	<channel-type id="commandConf">
+        <item-type>String</item-type>
+        <label>Command</label>
+        <description>Livolo configuration command.</description>
+    </channel-type>
+    <channel-type id="remoteIdConf">
+        <item-type>String</item-type>
+        <label>Remote Id</label>
+        <description>Livolo configuration remote id.</description>
+    </channel-type>
 
 </thing:thing-descriptions>

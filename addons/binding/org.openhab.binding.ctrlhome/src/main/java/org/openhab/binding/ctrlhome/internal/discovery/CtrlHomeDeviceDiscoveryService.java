@@ -42,7 +42,7 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
 
     private CtrlHomeBridgeHandler bridgeHandler;
     private List<Topic> deviceTopics = new ArrayList<Topic>();
-    private MqttConnection mqttconnection;
+    private MqttConnection mqttConnection;
     private TopicParser topicParser;
 
     public CtrlHomeDeviceDiscoveryService(CtrlHomeConfiguration configuration, CtrlHomeBridgeHandler bridgeHandler) {
@@ -52,7 +52,7 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
         logger.info("ctrlHome Device Discovery Service started");
 
         this.bridgeHandler = bridgeHandler;
-        mqttconnection = new MqttConnection(configuration, this);
+        mqttConnection = new MqttConnection(configuration, this);
         topicParser = new TopicParser(configuration.getBaseTopic());
     }
 
@@ -131,6 +131,20 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
                         thingDiscovered(dr);
                     }
                 }
+
+                if (deviceTopic.getNodeType().equals(CtrlHomeBindingConstants.DEVICE_LIVOLO_CONFIGURATOR)) {
+                    thingType = CtrlHomeBindingConstants.THING_TYPE_LIVOLO_SWITCH;
+                    label = CtrlHomeBindingConstants.LABEL_DEVICE_LIVOLO_SWITCH;
+
+                    String deviceId = deviceTopic.getDeviceId() + deviceTopic.getNodeId();
+                    ThingUID uid = new ThingUID(thingType, String.valueOf(deviceId.hashCode()));
+                    if (uid != null) {
+                        DiscoveryResult dr = DiscoveryResultBuilder.create(uid).withLabel(label)
+                                .withBridge(bridge.getUID()).withThingType(thingType).build();
+                        thingDiscovered(dr);
+                    }
+                }
+
                 deviceTopic.setNodeDiscovered(true);
             }
         }
@@ -140,7 +154,7 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
     protected void startScan() {
         logger.info("ctrlHome Device Discovery Service start scan");
 
-        mqttconnection.listenForDevices(bridgeHandler.getThing().getConfiguration().getProperties()
+        mqttConnection.listenForDeviceDiscovery(bridgeHandler.getThing().getConfiguration().getProperties()
                 .get(CtrlHomeBindingConstants.PROPERTY_BRIDGE_DEVICE_ID).toString(), this);
         deviceTopics.clear();
     }
@@ -150,7 +164,8 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
         logger.info("ctrlHome Device Discovery Service stop scan");
 
         super.stopScan();
-        mqttconnection.unsubscribeListenForBridge();
+        mqttConnection.unsubscribeListenForBridgeDiscovery();
         deviceTopics.clear();
     }
+
 }

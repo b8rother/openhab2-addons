@@ -40,7 +40,7 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
     private final Logger logger = LoggerFactory.getLogger(CtrlHomeBridgeDiscoveryService.class);
 
     private List<Topic> bridgeTopics = new ArrayList<Topic>();
-    private MqttConnection mqttconnection;
+    private MqttConnection mqttConnection;
     private TopicParser topicParser;
 
     public CtrlHomeBridgeDiscoveryService(CtrlHomeConfiguration configuration) {
@@ -49,7 +49,7 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
 
         logger.info("ctrlHome Bridge Discovery Service started");
 
-        mqttconnection = new MqttConnection(configuration, this);
+        mqttConnection = new MqttConnection(configuration, this);
         topicParser = new TopicParser(configuration.getBaseTopic());
 
     }
@@ -123,7 +123,7 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
     protected void startScan() {
         logger.info("ctrlHome Bridge Discovery Service start scan");
 
-        mqttconnection.listenForBridge(this);
+        mqttConnection.listenForBridgeDiscovery(this);
         bridgeTopics.clear();
     }
 
@@ -132,7 +132,7 @@ public class CtrlHomeBridgeDiscoveryService extends AbstractDiscoveryService imp
         logger.info("ctrlHome Bridge Discovery Service stop scan");
 
         super.stopScan();
-        mqttconnection.unsubscribeListenForBridge();
+        mqttConnection.unsubscribeListenForBridgeDiscovery();
         bridgeTopics.clear();
     }
 

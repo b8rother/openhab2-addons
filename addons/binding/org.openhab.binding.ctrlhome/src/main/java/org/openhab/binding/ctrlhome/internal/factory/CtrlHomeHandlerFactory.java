@@ -65,7 +65,7 @@ public class CtrlHomeHandlerFactory extends BaseThingHandlerFactory {
                     DiscoveryService.class.getName(), discoveryService, new Hashtable<String, Object>()));
             return bridgeHandler;
         } else if (supportsThingType(thing.getThingTypeUID())) {
-            return new CtrlHomeDeviceHandler(thing);
+            return new CtrlHomeDeviceHandler(thing, configuration);
         } else {
             logger.debug("ThingHandler not found for {}", thing.getThingTypeUID());
             return null;

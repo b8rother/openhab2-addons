@@ -31,12 +31,14 @@ public class CtrlHomeBindingConstants {
 
     // List of device types
     public static final String  BRIDGE_CTRLHOME_GATEWAY                 = "bridge";
+    public static final String  DEVICE_LIVOLO_CONFIGURATOR              = "livoloconf";
     public static final String  DEVICE_LIVOLO_DIMMER                    = "livolodimmer";
     public static final String  DEVICE_LIVOLO_ROLLERSHUTTER             = "livolorollershutter";
     public static final String  DEVICE_LIVOLO_SWITCH                    = "livoloswitch";
 
     // List of device labels
     public static final String  LABEL_BRIDGE_CTRLHOME_GATEWAY           = "ctrlHome Gateway";
+    public static final String  LABEL_DEVICE_LIVOLO_CONFIGURATOR        = "ctrlHome Livolo Configurator";
     public static final String  LABEL_DEVICE_LIVOLO_DIMMER              = "ctrlHome Livolo Dimmer";
     public static final String  LABEL_DEVICE_LIVOLO_ROLLERSHUTTER       = "ctrlHome Livolo Rollershutter";
     public static final String  LABEL_DEVICE_LIVOLO_SWITCH              = "ctrlHome Livolo Switch";
@@ -61,6 +63,8 @@ public class CtrlHomeBindingConstants {
     public final static String PROPERTY_BRIDGE_FW_CHECKSUM              = "fwChecksum";
 
     // Device Properties
+    public static final Object PROPERTY_DEVICE_ID                       = "deviceId";
+    public static final Object PROPERTY_DEVICE_SUBINDEX_ID              = "indexId";
     public final static String PROPERTY_DEVICE_REMOTE_ID                = "remoteId";
     public final static String PROPERTY_DEVICE_REMOTE_ID_UP             = "remoteIdUp";
     public final static String PROPERTY_DEVICE_REMOTE_ID_DOWN           = "remoteIdDown";
@@ -73,6 +77,7 @@ public class CtrlHomeBindingConstants {
 
     // List of all Thing Type UIDs
     public final static ThingTypeUID THING_TYPE_CTRLHOME_BRIDGE_GATEWAY = new ThingTypeUID(BINDING_ID, BRIDGE_CTRLHOME_GATEWAY);
+    public final static ThingTypeUID THING_TYPE_LIVOLO_CONFIGURATOR = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_CONFIGURATOR);
     public final static ThingTypeUID THING_TYPE_LIVOLO_DIMMER = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_DIMMER);
     public final static ThingTypeUID THING_TYPE_LIVOLO_ROLLERSHUTTER = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_ROLLERSHUTTER);
     public final static ThingTypeUID THING_TYPE_LIVOLO_SWITCH = new ThingTypeUID(BINDING_ID, DEVICE_LIVOLO_SWITCH);
@@ -84,12 +89,14 @@ public class CtrlHomeBindingConstants {
     // Collections of supported devices
     public final static Collection<ThingTypeUID> SUPPORTED_ALL_THING_TYPES_UIDS = Lists.newArrayList(
             THING_TYPE_CTRLHOME_BRIDGE_GATEWAY,
+            THING_TYPE_LIVOLO_CONFIGURATOR,
             THING_TYPE_LIVOLO_DIMMER, THING_TYPE_LIVOLO_ROLLERSHUTTER, THING_TYPE_LIVOLO_SWITCH
             );
     public final static Set<ThingTypeUID> SUPPORTED_BRIDGE_THING_TYPES_UIDS = ImmutableSet.of(
             THING_TYPE_CTRLHOME_BRIDGE_GATEWAY
             );
     public final static Set<ThingTypeUID> SUPPORTED_DEVICE_THING_TYPES_UIDS = ImmutableSet.of(
+            THING_TYPE_LIVOLO_CONFIGURATOR,
             THING_TYPE_LIVOLO_DIMMER, THING_TYPE_LIVOLO_ROLLERSHUTTER, THING_TYPE_LIVOLO_SWITCH
             );
 
