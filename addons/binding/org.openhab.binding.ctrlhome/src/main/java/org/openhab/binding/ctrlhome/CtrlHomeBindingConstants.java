@@ -28,7 +28,7 @@ public class CtrlHomeBindingConstants {
 
     // List of device types
     public static final String  BRIDGE_CTRLHOME_GATEWAY                 = "bridge";
-    public static final String  DEVICE_LIVOLO_CONFIGURATOR              = "livoloconf";
+    public static final String  DEVICE_LIVOLO_CONFIGURATOR              = "livoloconfigurator";
     public static final String  DEVICE_LIVOLO_DIMMER                    = "livolodimmer";
     public static final String  DEVICE_LIVOLO_ROLLERSHUTTER             = "livolorollershutter";
     public static final String  DEVICE_LIVOLO_SWITCH                    = "livoloswitch";

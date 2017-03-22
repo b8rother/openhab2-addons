@@ -133,8 +133,8 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
                 }
 
                 if (deviceTopic.getNodeType().equals(CtrlHomeBindingConstants.DEVICE_LIVOLO_CONFIGURATOR)) {
-                    thingType = CtrlHomeBindingConstants.THING_TYPE_LIVOLO_SWITCH;
-                    label = CtrlHomeBindingConstants.LABEL_DEVICE_LIVOLO_SWITCH;
+                    thingType = CtrlHomeBindingConstants.THING_TYPE_LIVOLO_CONFIGURATOR;
+                    label = CtrlHomeBindingConstants.LABEL_DEVICE_LIVOLO_CONFIGURATOR;
 
                     String deviceId = deviceTopic.getDeviceId() + deviceTopic.getNodeId();
                     ThingUID uid = new ThingUID(thingType, String.valueOf(deviceId.hashCode()));
