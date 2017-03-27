@@ -60,8 +60,8 @@ public class CtrlHomeBindingConstants {
     public final static String PROPERTY_BRIDGE_FW_CHECKSUM              = "fwChecksum";
 
     // Device Properties
-    public static final Object PROPERTY_DEVICE_ID                       = "deviceId";
-    public static final Object PROPERTY_DEVICE_SUBINDEX_ID              = "indexId";
+    public static final String PROPERTY_DEVICE_ID                       = "deviceId";
+    public static final String PROPERTY_DEVICE_SUBINDEX_ID              = "indexId";
     public final static String PROPERTY_DEVICE_REMOTE_ID                = "remoteId";
     public final static String PROPERTY_DEVICE_REMOTE_ID_UP             = "remoteIdUp";
     public final static String PROPERTY_DEVICE_REMOTE_ID_DOWN           = "remoteIdDown";

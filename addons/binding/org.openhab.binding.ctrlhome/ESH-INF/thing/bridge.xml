@@ -46,7 +46,7 @@
                 <description>The MAC address of the device.</description>
             </parameter>
             <parameter name="localIp" type="text" readOnly="true" groupName="device">
-                <label>Device Id</label>
+                <label>Local IP</label>
                 <description>The IP address of the device.</description>
             </parameter>
             

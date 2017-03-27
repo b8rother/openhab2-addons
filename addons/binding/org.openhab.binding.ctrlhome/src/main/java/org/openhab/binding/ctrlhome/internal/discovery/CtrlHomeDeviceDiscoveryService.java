@@ -96,12 +96,16 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
                         .get(CtrlHomeBindingConstants.PROPERTY_BRIDGE_IMPLEMENTATION_CONFIG).toString();
                 ThingTypeUID thingType = null;
                 Map<String, Object> properties = new HashMap<>(2);
+                properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_ID, deviceTopic.getNodeId());
                 String label = "";
+                int i = 0;
 
                 for (String remoteId : topicParser.getRemoteIds(deviceTopic.getNodeType(), implementationConfig)) {
+                    i++;
                     logger.info("Adding new ctrlHome device {} with id '{}' and remote id '{}' to inbox.",
                             deviceTopic.getName(), deviceTopic.getNodeId(), remoteId);
 
+                    properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_SUBINDEX_ID, i);
                     if (deviceTopic.getNodeType().equals(CtrlHomeBindingConstants.DEVICE_LIVOLO_SWITCH)) {
                         properties.put(CtrlHomeBindingConstants.PROPERTY_DEVICE_REMOTE_ID, remoteId);
                         thingType = CtrlHomeBindingConstants.THING_TYPE_LIVOLO_SWITCH;
@@ -124,7 +128,7 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
                     }
                     label += " - remote Id:" + remoteId;
                     String deviceId = deviceTopic.getDeviceId() + deviceTopic.getNodeId() + remoteId;
-                    ThingUID uid = new ThingUID(thingType, String.valueOf(deviceId.hashCode()));
+                    ThingUID uid = new ThingUID(thingType, String.valueOf(Math.abs(deviceId.hashCode())));
                     if (uid != null) {
                         DiscoveryResult dr = DiscoveryResultBuilder.create(uid).withProperties(properties)
                                 .withLabel(label).withBridge(bridge.getUID()).withThingType(thingType).build();
@@ -137,10 +141,10 @@ public class CtrlHomeDeviceDiscoveryService extends AbstractDiscoveryService imp
                     label = CtrlHomeBindingConstants.LABEL_DEVICE_LIVOLO_CONFIGURATOR;
 
                     String deviceId = deviceTopic.getDeviceId() + deviceTopic.getNodeId();
-                    ThingUID uid = new ThingUID(thingType, String.valueOf(deviceId.hashCode()));
+                    ThingUID uid = new ThingUID(thingType, String.valueOf(Math.abs(deviceId.hashCode())));
                     if (uid != null) {
-                        DiscoveryResult dr = DiscoveryResultBuilder.create(uid).withLabel(label)
-                                .withBridge(bridge.getUID()).withThingType(thingType).build();
+                        DiscoveryResult dr = DiscoveryResultBuilder.create(uid).withProperties(properties)
+                                .withLabel(label).withBridge(bridge.getUID()).withThingType(thingType).build();
                         thingDiscovered(dr);
                     }
                 }

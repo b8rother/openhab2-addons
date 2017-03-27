@@ -36,6 +36,16 @@
                 <advanced>true</advanced>
             </parameter-group>
             
+            <parameter name="deviceId" type="text" required="true" groupName="device">
+                <label>Device Id</label>
+                <description>The device id.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="indexId" type="text" required="true" groupName="device">
+                <label>Device Subgroup Id</label>
+                <description>The device subgroup id.</description>
+                <advanced>true</advanced>
+            </parameter>
             <parameter name="room" type="text" required="false" groupName="device">
                 <label>Room</label>
                 <description>The room name.</description>
@@ -67,6 +77,22 @@
         </channels>
         
         <config-description>
+            <parameter-group name="device">
+                <label>Device Settings</label>
+                <description>Device parameter settings</description>
+                <advanced>true</advanced>
+            </parameter-group>
+            
+            <parameter name="deviceId" type="text" required="true" groupName="device">
+                <label>Device Id</label>
+                <description>The device id.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="indexId" type="text" required="true" groupName="device">
+                <label>Device Subgroup Id</label>
+                <description>The device subgroup id.</description>
+                <advanced>true</advanced>
+            </parameter>
             <parameter name="room" type="text" required="false" groupName="device">
                 <label>Room</label>
                 <description>The room name.</description>
@@ -98,6 +124,22 @@
         </channels>
         
         <config-description>
+            <parameter-group name="device">
+                <label>Device Settings</label>
+                <description>Device parameter settings</description>
+                <advanced>true</advanced>
+            </parameter-group>
+            
+            <parameter name="deviceId" type="text" required="true" groupName="device">
+                <label>Device Id</label>
+                <description>The device id.</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="indexId" type="text" required="true" groupName="device">
+                <label>Device Subgroup Id</label>
+                <description>The device subgroup id.</description>
+                <advanced>true</advanced>
+            </parameter>
             <parameter name="room" type="text" required="false" groupName="device">
                 <label>Room</label>
                 <description>The room name.</description>
